@@ -10,3 +10,6 @@ Thumbs.db
 # Editor
 .vscode/
 *.log
+
+# Local Claude Code settings
+.claude/settings.local.json
