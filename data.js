@@ -8,11 +8,11 @@ const TYPES = ["Template", "Guide", "Checklist", "Example", "Tool"];
 
 // Task-based shortcuts for the "jump to what you need" row and "By need" view.
 const NEEDS = [
-  { id: "start-project", label: "Start a new project" },
-  { id: "client-meeting", label: "Prep for a client meeting" },
-  { id: "cost-estimate", label: "Build a cost estimate" },
-  { id: "present-design", label: "Present a design" },
-  { id: "spec-materials", label: "Spec materials & FF&E" },
+  { id: "start-project", label: "How do I start a new project?" },
+  { id: "client-meeting", label: "How do I prep for a client meeting?" },
+  { id: "cost-estimate", label: "How do I build a cost estimate?" },
+  { id: "present-design", label: "How do I present a design?" },
+  { id: "spec-materials", label: "How do I spec materials & FF&E?" },
 ];
 
 // The 7 phases of the DJDS architecture design process.
