@@ -22,25 +22,44 @@
   <div id="app" class="app" hidden>
     <header class="app-header">
       <div class="brand">
-        <span class="brand-mark">◆</span>
+        <span class="brand-mark" aria-hidden="true">◆</span>
         <div>
           <h1>Design Studio Compass</h1>
-          <p class="brand-sub">Find the right template, guide, or resource — organized around how we work.</p>
+          <p class="brand-sub">Your map to every template, guide, and tool — organized around how we design.</p>
         </div>
       </div>
-      <input type="search" id="search" class="search" placeholder="Search resources…" />
+      <div class="search-wrap">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input type="search" id="search" class="search" placeholder="Search all resources…" aria-label="Search resources" />
+      </div>
     </header>
 
+    <!-- Process journey: the framework at a glance -->
+    <section class="journey" aria-label="DJDS design process phases">
+      <div class="journey-head">
+        <span class="journey-kicker">The DJDS design process</span>
+        <span class="journey-hint">Seven phases, concept&nbsp;→&nbsp;FF&amp;E. Pick a phase to focus it, or browse by type or need below.</span>
+      </div>
+      <ol id="journey-rail" class="journey-rail"></ol>
+    </section>
+
+    <!-- Task shortcuts -->
     <section class="shortcuts">
-      <span class="shortcuts-label">Jump to what you need:</span>
+      <span class="shortcuts-label">Jump to what you need</span>
       <div id="shortcuts-row" class="shortcuts-row"></div>
     </section>
 
-    <nav class="views">
-      <button class="view-btn is-active" data-view="phase">By phase</button>
-      <button class="view-btn" data-view="type">By type</button>
-      <button class="view-btn" data-view="need">By need</button>
-      <button id="clear-filter" class="clear-filter" hidden>Clear filter ✕</button>
+    <!-- Controls -->
+    <nav class="views" aria-label="View and filters">
+      <div class="view-group" role="group" aria-label="Group resources by">
+        <button class="view-btn is-active" data-view="phase">By phase</button>
+        <button class="view-btn" data-view="type">By type</button>
+        <button class="view-btn" data-view="need">By need</button>
+      </div>
+      <div class="results-meta">
+        <span id="result-count" class="result-count"></span>
+        <button id="clear-filter" class="clear-filter" hidden></button>
+      </div>
     </nav>
 
     <main id="content" class="content"></main>
