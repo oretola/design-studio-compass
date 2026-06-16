@@ -28,7 +28,7 @@ It's a plain static site, so no config is needed:
 
 ## Password
 The shared team password lives in `data.js` as `TEAM_PASSWORD` (currently
-`djds2026`). Change it there.
+`DJDS2026`). Change it there.
 
 ⚠️ This is a client-side gate for a demo, not real security — the password is
 visible in the source. For real protection, move to a Vercel password / auth

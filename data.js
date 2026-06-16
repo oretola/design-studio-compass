@@ -1,7 +1,7 @@
 // All placeholder data for the DJDS Design Studio Resource Hub.
 // Drive links are dummy URLs — not real systems or client info.
 
-const TEAM_PASSWORD = "djds2026";
+const TEAM_PASSWORD = "DJDS2026";
 
 // Resource types used for the "By type" view and filter chips.
 const TYPES = ["Template", "Guide", "Checklist", "Example", "Tool"];
