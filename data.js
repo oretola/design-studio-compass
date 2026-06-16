@@ -15,6 +15,30 @@ const NEEDS = [
   { id: "spec-materials", label: "How do I spec materials & FF&E?" },
 ];
 
+// ---- Top level: Values & Culture (high-level beliefs) ----
+// Placeholder content — replace with the studio's real mission and values.
+const VALUES_INTRO = {
+  kicker: "What we believe",
+  statement: "Design is never neutral. We use it to shift power toward the communities most harmed by injustice.",
+  body: "These beliefs shape every project we take on and how we work together as a studio. Start here to understand the why before diving into the how. [Placeholder copy.]",
+};
+
+const VALUES = [
+  { title: "Center those most impacted", body: "The people closest to the problem are closest to the solution. We design with their leadership, not our assumptions." },
+  { title: "Design with, not for", body: "Community members are co-designers and decision-makers throughout the process — not an audience we present to." },
+  { title: "Repair over punishment", body: "We create spaces that heal and restore relationships rather than control and confine." },
+  { title: "Beauty is dignity", body: "Communities that have been disinvested deserve spaces that are not just functional, but beautiful." },
+  { title: "Build lasting power", body: "Our work leaves communities with ownership, skills, and infrastructure that outlast the project." },
+  { title: "Tell the truth", body: "We name the history and the harm a site carries, and design honestly in response." },
+];
+
+const CULTURE = [
+  { title: "We share the work", body: "Credit, decisions, and learning are distributed across the team." },
+  { title: "We work in the open", body: "Process, drafts, and rationale stay visible so anyone can pick up the thread." },
+  { title: "We make room to learn", body: "Questions are welcome; nobody is expected to know everything." },
+  { title: "We protect the mission", body: "We choose projects and partners that advance justice — and we can say no." },
+];
+
 // The 7 phases of the DJDS architecture design process.
 // Concept Development is fully fleshed out with 4 subphases for v1;
 // the others carry a few sample resources each.

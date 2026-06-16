@@ -59,8 +59,20 @@
       </div>
     </header>
 
-    <!-- Simple filter bar -->
-    <nav class="filterbar" aria-label="Browse resources by">
+    <!-- Top-level sections -->
+    <nav class="topnav" aria-label="Main sections">
+      <button class="topnav-btn" data-section="values" type="button">
+        <span class="topnav-label">Values &amp; Culture</span>
+        <span class="topnav-sub">What we believe</span>
+      </button>
+      <button class="topnav-btn is-active" data-section="process" type="button">
+        <span class="topnav-label">Process &amp; Resources</span>
+        <span class="topnav-sub">How we work, phase by phase</span>
+      </button>
+    </nav>
+
+    <!-- Simple filter bar (Process & Resources only) -->
+    <nav class="filterbar" id="filterbar" aria-label="Browse resources by">
       <div class="filter-group" role="group" aria-label="View">
         <button class="filter-btn is-active" data-view="phase">All phases</button>
         <button class="filter-btn" data-view="type">By type</button>

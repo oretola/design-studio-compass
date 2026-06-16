@@ -52,6 +52,7 @@
 
   // ---- App state ----
   const state = {
+    section: "process", // "values" | "process"
     view: "phase",      // "phase" | "type" | "question"
     search: "",
     needFilter: null,   // need id when filtering via a question chip
@@ -296,17 +297,27 @@
       .join("");
 
     document.getElementById("content").innerHTML =
-      '<article class="onepager" style="--phase:' + color + '">' +
       '<button class="back-link" type="button" id="back-to-phase">← ' + phase.name + "</button>" +
-      '<header class="op-head">' +
+      '<article class="onepager" style="--phase:' + color + '">' +
+      '<header class="op-hero">' +
+      '<span class="op-hero-icon">' + iconSvg(phase.id) + "</span>" +
+      '<div class="op-hero-text">' +
       '<span class="op-kicker">' + phase.name + " · Step " + stepIdx + " of " + phase.subphases.length + "</span>" +
       "<h2>" + sub.name + "</h2>" +
       '<p class="op-summary">' + sub.summary + "</p>" +
+      "</div>" +
       "</header>" +
+      '<div class="op-body">' +
+      '<aside class="op-stats-col">' +
+      '<h3 class="op-stats-title">Stats</h3>' +
       '<dl class="op-stats">' + stats + "</dl>" +
+      "</aside>" +
+      '<div class="op-main">' +
       '<section class="op-section"><h3>Overview</h3><p>' + op.overview + "</p></section>" +
       '<section class="op-section"><h3>Steps</h3><ol class="op-steps">' + steps + "</ol></section>" +
       '<section class="op-section"><h3>Templates &amp; resources</h3>' + resources + "</section>" +
+      "</div>" +
+      "</div>" +
       "</article>";
 
     document.getElementById("back-to-phase").addEventListener("click", function () {
@@ -360,8 +371,58 @@
     );
   }
 
+  // ---- View: Values & Culture (top-level) ----
+  function renderValues() {
+    const valueCards = VALUES.map(function (v) {
+      return (
+        '<div class="value-card">' +
+        '<h3 class="value-title">' + v.title + "</h3>" +
+        '<p class="value-body">' + v.body + "</p>" +
+        "</div>"
+      );
+    }).join("");
+
+    const cultureCards = CULTURE.map(function (c) {
+      return (
+        '<div class="culture-item">' +
+        '<h4 class="culture-title">' + c.title + "</h4>" +
+        '<p class="culture-body">' + c.body + "</p>" +
+        "</div>"
+      );
+    }).join("");
+
+    document.getElementById("content").innerHTML =
+      '<section class="values">' +
+      '<div class="values-intro">' +
+      '<span class="values-kicker">' + VALUES_INTRO.kicker + "</span>" +
+      '<h2 class="values-statement">' + VALUES_INTRO.statement + "</h2>" +
+      '<p class="values-lead">' + VALUES_INTRO.body + "</p>" +
+      "</div>" +
+      '<h3 class="values-section-head">Our values</h3>' +
+      '<div class="value-grid">' + valueCards + "</div>" +
+      '<h3 class="values-section-head">Our culture</h3>' +
+      '<div class="culture-grid">' + cultureCards + "</div>" +
+      "</section>";
+  }
+
   // ---- Main render ----
   function render() {
+    // Top-level section active state.
+    document.querySelectorAll(".topnav-btn").forEach(function (btn) {
+      btn.classList.toggle("is-active", btn.getAttribute("data-section") === state.section);
+    });
+    const filterbar = document.getElementById("filterbar");
+
+    // Values & Culture is a standalone top-level section.
+    if (state.section === "values") {
+      filterbar.hidden = true;
+      renderValues();
+      document.getElementById("result-count").textContent = "";
+      document.getElementById("clear-filter").hidden = true;
+      return;
+    }
+    filterbar.hidden = false;
+
     // Filter bar active state.
     document.querySelectorAll(".filter-btn").forEach(function (btn) {
       btn.classList.toggle("is-active", btn.getAttribute("data-view") === state.view);
@@ -429,6 +490,14 @@
   }
 
   // ---- Controls ----
+  document.querySelectorAll(".topnav-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      state.section = btn.getAttribute("data-section");
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+
   document.querySelectorAll(".filter-btn").forEach(function (btn) {
     btn.addEventListener("click", function () {
       state.view = btn.getAttribute("data-view");
@@ -441,6 +510,8 @@
 
   document.getElementById("search").addEventListener("input", function (e) {
     state.search = e.target.value.trim();
+    // Searching is about resources — jump to Process & Resources.
+    if (state.search) state.section = "process";
     render();
   });
 
