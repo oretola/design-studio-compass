@@ -56,6 +56,7 @@
     search: "",
     needFilter: null,   // need id when filtering via a question chip
     openPhase: null,    // phase id when a tile is opened
+    openSub: null,      // subphase id when a one-pager is opened
   };
 
   // ---- Sign-in gate ----
@@ -200,8 +201,25 @@
 
     const idx = PHASES.indexOf(phase) + 1;
     const count = phaseTotal(phase);
+    const total = phase.subphases.length;
+
     const body = phase.subphases
-      .map(function (sub) {
+      .map(function (sub, i) {
+        // Subphases with one-pager content become clickable section cards.
+        if (sub.onePager) {
+          return (
+            '<button class="subcard" type="button" data-sub="' + sub.id + '" style="--phase:' + phaseColor(phase.id) + '" ' +
+            'aria-label="Open one-pager: ' + sub.name + '">' +
+            '<span class="subcard-step">' + (i + 1) + "</span>" +
+            '<span class="subcard-text">' +
+            '<span class="subcard-name">' + sub.name + "</span>" +
+            '<span class="subcard-summary">' + sub.summary + "</span>" +
+            "</span>" +
+            '<span class="subcard-cta">' + plural(sub.resources.length) + " · One-pager →</span>" +
+            "</button>"
+          );
+        }
+        // Otherwise, list resources inline as before.
         return (
           '<div class="subphase">' +
           '<div class="subphase-name">' + sub.name + "</div>" +
@@ -215,6 +233,9 @@
       })
       .join("");
 
+    const hasSections = phase.subphases.some(function (s) { return s.onePager; });
+    const bodyWrap = hasSections ? '<div class="subcard-list">' + body + "</div>" : '<div class="detail-body">' + body + "</div>";
+
     document.getElementById("content").innerHTML =
       '<div class="phase-detail" style="--phase:' + phaseColor(phase.id) + '">' +
       '<button class="back-link" type="button" id="back-to-phases">← All phases</button>' +
@@ -227,11 +248,69 @@
       "</div>" +
       '<span class="detail-count">' + plural(count) + "</span>" +
       "</header>" +
-      '<div class="detail-body">' + body + "</div>" +
+      bodyWrap +
       "</div>";
 
     document.getElementById("back-to-phases").addEventListener("click", function () {
       state.openPhase = null;
+      render();
+    });
+    document.querySelectorAll(".subcard").forEach(function (card) {
+      card.addEventListener("click", function () {
+        state.openSub = card.getAttribute("data-sub");
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+  }
+
+  // ---- View: a subphase one-pager ----
+  function renderOnePager(phaseId, subId) {
+    const phase = PHASES.find(function (p) { return p.id === phaseId; });
+    const sub = phase && phase.subphases.find(function (s) { return s.id === subId; });
+    if (!sub || !sub.onePager) { state.openSub = null; return renderPhaseDetail(phaseId); }
+
+    const op = sub.onePager;
+    const stepIdx = phase.subphases.indexOf(sub) + 1;
+    const color = phaseColor(phase.id);
+
+    const stats = (op.stats || [])
+      .map(function (s) {
+        return (
+          '<div class="op-stat">' +
+          '<dt>' + s.label + "</dt>" +
+          "<dd>" + s.value + "</dd>" +
+          "</div>"
+        );
+      })
+      .join("");
+
+    const steps = (op.steps || [])
+      .map(function (st) { return "<li>" + st + "</li>"; })
+      .join("");
+
+    const resources = sub.resources
+      .map(function (r) {
+        return resourceRow(Object.assign({}, r, { phaseId: phase.id, phaseName: phase.name }), false);
+      })
+      .join("");
+
+    document.getElementById("content").innerHTML =
+      '<article class="onepager" style="--phase:' + color + '">' +
+      '<button class="back-link" type="button" id="back-to-phase">← ' + phase.name + "</button>" +
+      '<header class="op-head">' +
+      '<span class="op-kicker">' + phase.name + " · Step " + stepIdx + " of " + phase.subphases.length + "</span>" +
+      "<h2>" + sub.name + "</h2>" +
+      '<p class="op-summary">' + sub.summary + "</p>" +
+      "</header>" +
+      '<dl class="op-stats">' + stats + "</dl>" +
+      '<section class="op-section"><h3>Overview</h3><p>' + op.overview + "</p></section>" +
+      '<section class="op-section"><h3>Steps</h3><ol class="op-steps">' + steps + "</ol></section>" +
+      '<section class="op-section"><h3>Templates &amp; resources</h3>' + resources + "</section>" +
+      "</article>";
+
+    document.getElementById("back-to-phase").addEventListener("click", function () {
+      state.openSub = null;
       render();
     });
   }
@@ -291,7 +370,8 @@
     if (state.search) {
       renderSearchResults();
     } else if (state.view === "phase") {
-      if (state.openPhase) renderPhaseDetail(state.openPhase);
+      if (state.openPhase && state.openSub) renderOnePager(state.openPhase, state.openSub);
+      else if (state.openPhase) renderPhaseDetail(state.openPhase);
       else renderTiles();
     } else if (state.view === "type") {
       renderGrouped("type", TYPES, function (t) { return t + "s"; });
@@ -315,6 +395,10 @@
     if (state.openPhase) {
       const p = PHASES.find(function (x) { return x.id === state.openPhase; });
       labels.push(p ? p.name : state.openPhase);
+      if (state.openSub && p) {
+        const sub = p.subphases.find(function (s) { return s.id === state.openSub; });
+        if (sub) labels.push(sub.name);
+      }
     }
     if (state.needFilter) {
       const n = NEEDS.find(function (x) { return x.id === state.needFilter; });
@@ -334,6 +418,7 @@
     state.search = "";
     state.needFilter = null;
     state.openPhase = null;
+    state.openSub = null;
     document.getElementById("search").value = "";
     render();
   }
@@ -348,6 +433,7 @@
     btn.addEventListener("click", function () {
       state.view = btn.getAttribute("data-view");
       state.openPhase = null;
+      state.openSub = null;
       state.needFilter = null;
       render();
     });
