@@ -10,8 +10,9 @@
   --muted: #6b7280;
   --line: #e6e2d9;
   --line-strong: #d6d0c4;
-  --accent: #c2410c;
-  --accent-deep: #9a330a;
+  --accent: #009ca7;        /* DJDS brand teal */
+  --accent-deep: #007a83;
+  --brand-teal: #009ca7;
   --chip-bg: #ece8df;
   --shadow: 0 1px 2px rgba(28, 37, 48, 0.06), 0 4px 14px rgba(28, 37, 48, 0.05);
   --shadow-lift: 0 6px 16px rgba(28, 37, 48, 0.10), 0 18px 40px rgba(28, 37, 48, 0.12);
@@ -27,8 +28,9 @@
   --muted: #98a0ab;
   --line: #2a2e36;
   --line-strong: #3a3f49;
-  --accent: #f97316;
-  --accent-deep: #fb923c;
+  --accent: #2bb7c2;        /* brighter teal for dark bg */
+  --accent-deep: #5fd0d9;
+  --brand-teal: #009ca7;
   --chip-bg: #23262d;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.35);
   --shadow-lift: 0 8px 22px rgba(0, 0, 0, 0.5), 0 22px 48px rgba(0, 0, 0, 0.55);
@@ -41,7 +43,7 @@
 
 body {
   margin: 0;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Raleway", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: var(--bg-grad), var(--bg);
   color: var(--ink);
   line-height: 1.55;
@@ -69,6 +71,14 @@ body {
   max-width: 400px;
   text-align: center;
 }
+.gate-logo {
+  display: inline-grid; place-items: center;
+  background: var(--brand-teal);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 22px;
+}
+.gate-logo img { display: block; height: 34px; width: auto; }
 .gate-card h1 { margin: 0 0 8px; font-size: 1.6rem; letter-spacing: -0.015em; }
 .gate-sub { color: var(--muted); margin: 0 0 24px; font-size: 0.95rem; }
 .field-label {
@@ -115,15 +125,14 @@ body {
   margin-bottom: 26px;
 }
 .brand { display: flex; gap: 14px; align-items: center; }
-.brand-mark {
-  font-size: 1.4rem;
-  color: var(--accent);
-  width: 44px; height: 44px;
-  display: grid; place-items: center;
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
-  border-radius: 12px;
+.brand-logo {
   flex: none;
+  display: grid; place-items: center;
+  background: var(--brand-teal);
+  border-radius: 12px;
+  padding: 12px 14px;
 }
+.brand-logo img { display: block; height: 26px; width: auto; }
 .brand h1 { margin: 0; font-size: 1.5rem; letter-spacing: -0.015em; }
 .brand-sub { margin: 3px 0 0; color: var(--muted); font-size: 0.9rem; max-width: 46ch; }
 
@@ -228,7 +237,7 @@ body {
 .tile:focus-visible { outline: 3px solid var(--phase); outline-offset: 2px; }
 .tile-top { display: flex; align-items: center; justify-content: space-between; }
 .tile-num {
-  font-family: "Archivo Narrow", "Inter", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-weight: 700;
   font-size: 0.95rem;
   color: var(--phase);
@@ -240,9 +249,10 @@ body {
 .tile-icon { width: 34px; height: 34px; color: var(--phase); }
 .tile-name {
   margin-top: auto;
-  font-size: 1.12rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: 1.02rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
   line-height: 1.25;
 }
 .tile-count { font-size: 0.8rem; color: var(--muted); margin-top: 5px; }
@@ -270,7 +280,7 @@ body {
 /* Task chips below the tiles */
 .tasks { margin-top: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
 .tasks-label {
-  font-family: "Archivo Narrow", "Inter", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
   color: var(--muted);
 }
@@ -325,7 +335,7 @@ body {
   padding: 8px;
 }
 .detail-kicker {
-  font-family: "Archivo Narrow", "Inter", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
   color: var(--phase);
 }
@@ -368,7 +378,7 @@ body {
   width: 30px; height: 30px;
   display: grid; place-items: center;
   border-radius: 999px;
-  font-family: "Archivo Narrow", "Inter", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-weight: 700;
   color: var(--phase);
   background: color-mix(in srgb, var(--phase) 14%, transparent);
@@ -411,7 +421,7 @@ body {
   padding: 11px;
 }
 .op-kicker {
-  font-family: "Archivo Narrow", "Inter", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
   color: rgba(255, 255, 255, 0.85);
 }
@@ -422,14 +432,14 @@ body {
 .op-body { display: flex; gap: 32px; padding: 26px 28px 30px; }
 .op-stats-col { flex: none; width: 200px; }
 .op-stats-title {
-  font-family: "Archivo Narrow", "Inter", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
   margin: 0 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--phase);
 }
 .op-stats { margin: 0; }
 .op-stat { padding: 0 0 14px; }
 .op-stat dt {
-  font-family: "Archivo Narrow", "Inter", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
   color: var(--muted); margin-bottom: 2px;
 }
@@ -439,7 +449,7 @@ body {
 .op-section { margin-bottom: 28px; }
 .op-section:last-child { margin-bottom: 0; }
 .op-section h3 {
-  font-family: "Archivo Narrow", "Inter", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: 1.15rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
   margin: 0 0 14px; padding-bottom: 6px;
   border-bottom: 2px solid var(--phase);
@@ -460,7 +470,7 @@ body {
 .op-steps li::before {
   content: counter(step, decimal-leading-zero);
   flex: none;
-  font-family: "Archivo Narrow", "Inter", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-weight: 700; font-size: 1.7rem; line-height: 1;
   color: var(--phase);
   padding-right: 16px;
@@ -489,7 +499,7 @@ body {
 .subphase { padding: 6px 0 12px; }
 .subphase:not(:first-child) { border-top: 1px solid var(--line); }
 .subphase-name {
-  font-family: "Archivo Narrow", "Inter", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 700;
   margin: 14px 0 6px;
 }
@@ -597,14 +607,14 @@ body {
 /* ============ Values & Culture ============ */
 .values-intro { max-width: 72ch; margin: 4px 0 34px; }
 .values-kicker {
-  font-family: "Archivo Narrow", "Inter", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
   color: var(--accent);
 }
 .values-statement { font-size: 1.85rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; margin: 8px 0 14px; max-width: 24ch; }
 .values-lead { margin: 0; color: var(--ink-soft); font-size: 1.02rem; }
 .values-section-head {
-  font-family: "Archivo Narrow", "Inter", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
   margin: 30px 0 16px; padding-bottom: 6px;
   border-bottom: 2px solid var(--accent);

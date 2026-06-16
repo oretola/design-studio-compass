@@ -18,6 +18,10 @@
       color: "#0d9488",
       icon: '<path d="M12 3l8 4.5L12 12 4 7.5z"/><path d="M4 12l8 4.5L20 12"/><path d="M4 16.5L12 21l8-4.5"/>',
     },
+    "entitlements": {
+      color: "#4338ca",
+      icon: '<path d="M12 3l2.1 1.4 2.5-.3 1 2.3 2.1 1.4-.6 2.5.6 2.5-2.1 1.4-1 2.3-2.5-.3L12 21l-2.1-1.4-2.5.3-1-2.3L4.3 16l.6-2.5-.6-2.5 2.1-1.4 1-2.3 2.5.3z"/><path d="M9 12l2 2 4-4"/>',
+    },
     "construction-docs": {
       color: "#2563eb",
       icon: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 12h5"/><path d="M9.5 15.5h5"/>',

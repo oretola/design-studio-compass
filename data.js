@@ -183,6 +183,22 @@ const PHASES = [
     ],
   },
   {
+    id: "entitlements",
+    name: "Entitlements & Approvals",
+    blurb: "Secure the zoning, planning, and permitting approvals needed to build.",
+    subphases: [
+      {
+        id: "ent-general",
+        name: "Resources",
+        resources: [
+          { title: "Entitlement Tracker Template", type: "Template", needs: [], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-entitlement-tracker" },
+          { title: "Planning Submittal Checklist", type: "Checklist", needs: [], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-planning-submittal" },
+          { title: "Community Approvals Guide", type: "Guide", needs: ["client-meeting"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-community-approvals" },
+        ],
+      },
+    ],
+  },
+  {
     id: "construction-docs",
     name: "Construction Documents",
     blurb: "Produce the drawings and specs needed to build.",
