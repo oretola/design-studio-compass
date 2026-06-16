@@ -158,10 +158,18 @@ const PHASES = [
     blurb: "Translate the concept into preliminary plans and layouts.",
     subphases: [
       {
-        id: "schematic-general",
-        name: "Resources",
+        id: "schematic-plans",
+        name: "Plans & Layouts",
+        summary: "Develop preliminary floor plans, sections, and site layout from the approved concept.",
         resources: [
           { title: "Schematic Plan Template", type: "Template", needs: ["start-project"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-schematic-plan" },
+        ],
+      },
+      {
+        id: "schematic-code",
+        name: "Code & Zoning",
+        summary: "Check the emerging design against building code and zoning requirements.",
+        resources: [
           { title: "Code & Zoning Checklist", type: "Checklist", needs: [], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-code-zoning" },
         ],
       },
@@ -173,10 +181,18 @@ const PHASES = [
     blurb: "Refine systems, materials, and details.",
     subphases: [
       {
-        id: "dd-general",
-        name: "Resources",
+        id: "dd-systems",
+        name: "Systems & Materials",
+        summary: "Resolve structural, MEP, and material decisions in detail.",
         resources: [
           { title: "Material Selection Guide", type: "Guide", needs: ["spec-materials"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-materials" },
+        ],
+      },
+      {
+        id: "dd-estimating",
+        name: "Detailed Estimating",
+        summary: "Price the developed design and track it against budget.",
+        resources: [
           { title: "Detailed Cost Estimate Tool", type: "Tool", needs: ["cost-estimate"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-detailed-cost" },
         ],
       },
@@ -188,11 +204,19 @@ const PHASES = [
     blurb: "Secure the zoning, planning, and permitting approvals needed to build.",
     subphases: [
       {
-        id: "ent-general",
-        name: "Resources",
+        id: "ent-submittals",
+        name: "Planning Submittals",
+        summary: "Prepare and track the submittals required for planning and permitting.",
         resources: [
           { title: "Entitlement Tracker Template", type: "Template", needs: [], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-entitlement-tracker" },
           { title: "Planning Submittal Checklist", type: "Checklist", needs: [], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-planning-submittal" },
+        ],
+      },
+      {
+        id: "ent-approvals",
+        name: "Community & Agency Approvals",
+        summary: "Secure sign-off from community boards and review agencies.",
+        resources: [
           { title: "Community Approvals Guide", type: "Guide", needs: ["client-meeting"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-community-approvals" },
         ],
       },
@@ -204,10 +228,18 @@ const PHASES = [
     blurb: "Produce the drawings and specs needed to build.",
     subphases: [
       {
-        id: "cd-general",
-        name: "Resources",
+        id: "cd-drawings",
+        name: "Drawings & Standards",
+        summary: "Produce the coordinated construction drawings to studio standards.",
         resources: [
           { title: "CD Drawing Standards", type: "Guide", needs: [], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-cd-standards" },
+        ],
+      },
+      {
+        id: "cd-specs",
+        name: "Specifications",
+        summary: "Write the specifications that define materials and workmanship.",
+        resources: [
           { title: "Specification Template", type: "Template", needs: ["spec-materials"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-spec-template" },
         ],
       },
@@ -219,10 +251,18 @@ const PHASES = [
     blurb: "Support contractor selection and pricing.",
     subphases: [
       {
-        id: "bid-general",
-        name: "Resources",
+        id: "bid-package",
+        name: "Bid Package & Comparison",
+        summary: "Issue the bid package and compare contractor pricing.",
         resources: [
           { title: "Bid Comparison Tool", type: "Tool", needs: ["cost-estimate"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-bid-compare" },
+        ],
+      },
+      {
+        id: "bid-selection",
+        name: "Contractor Selection",
+        summary: "Run contractor Q&A and negotiate the award.",
+        resources: [
           { title: "Contractor Q&A Guide", type: "Guide", needs: [], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-contractor-qa" },
         ],
       },
@@ -234,10 +274,18 @@ const PHASES = [
     blurb: "Keep the build on track and on intent.",
     subphases: [
       {
-        id: "ca-general",
-        name: "Resources",
+        id: "ca-site",
+        name: "Site Observation",
+        summary: "Visit the site, document progress, and confirm work matches design intent.",
         resources: [
           { title: "Site Visit Report Template", type: "Template", needs: [], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-site-visit" },
+        ],
+      },
+      {
+        id: "ca-submittals",
+        name: "Submittals & RFIs",
+        summary: "Review submittals and respond to requests for information.",
+        resources: [
           { title: "Submittal Review Checklist", type: "Checklist", needs: [], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-submittal" },
         ],
       },
@@ -249,10 +297,18 @@ const PHASES = [
     blurb: "Furniture, fixtures & equipment selection and procurement.",
     subphases: [
       {
-        id: "ffe-general",
-        name: "Resources",
+        id: "ffe-selection",
+        name: "Selection & Scheduling",
+        summary: "Select furniture and fixtures and build the FF&E schedule.",
         resources: [
           { title: "FF&E Schedule Template", type: "Template", needs: ["spec-materials"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-ffe-schedule" },
+        ],
+      },
+      {
+        id: "ffe-procurement",
+        name: "Procurement & Vendors",
+        summary: "Source and procure FF&E through vetted vendors.",
+        resources: [
           { title: "Furniture Vendor List", type: "Guide", needs: ["spec-materials"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-vendors" },
         ],
       },

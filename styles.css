@@ -209,6 +209,27 @@ body {
 }
 .clear-filter:hover { background: color-mix(in srgb, var(--accent) 26%, transparent); }
 
+/* ============ "Ways to filter" sub-header ============ */
+.browse-head { margin-bottom: 10px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.browse-kicker {
+  font-family: "Raleway", sans-serif;
+  font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.browse-hint { font-size: 0.85rem; color: var(--muted); }
+
+/* ============ Breadcrumbs ============ */
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 14px; font-size: 0.85rem; }
+.crumb {
+  background: none; border: none; padding: 2px 2px; cursor: pointer;
+  font-family: inherit; font-size: 0.85rem; font-weight: 600;
+  color: var(--muted);
+}
+.crumb:hover { color: var(--accent); text-decoration: underline; }
+.crumb:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.crumb-sep { color: var(--line-strong); }
+.crumb-current { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+
 /* ============ Phase tiles (the landing) ============ */
 .tile-grid {
   display: grid;
@@ -446,6 +467,28 @@ body {
 .op-stat dd { margin: 0; font-size: 0.92rem; font-weight: 500; color: var(--ink); }
 
 .op-main { flex: 1; min-width: 0; }
+
+/* "Start here" — featured primary resource */
+.op-start {
+  display: block;
+  text-decoration: none;
+  background: color-mix(in srgb, var(--phase) 10%, var(--card));
+  border: 1px solid color-mix(in srgb, var(--phase) 35%, transparent);
+  border-left: 4px solid var(--phase);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 26px;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.op-start:hover { background: color-mix(in srgb, var(--phase) 16%, var(--card)); transform: translateX(2px); }
+.op-start-label {
+  display: block;
+  font-family: "Raleway", sans-serif;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--phase);
+}
+.op-start-title { display: block; font-size: 1.05rem; font-weight: 600; color: var(--ink); margin: 3px 0 2px; }
+.op-start-meta { display: block; font-size: 0.82rem; color: var(--muted); }
 .op-section { margin-bottom: 28px; }
 .op-section:last-child { margin-bottom: 0; }
 .op-section h3 {

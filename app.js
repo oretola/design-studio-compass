@@ -199,51 +199,63 @@
     });
   }
 
-  // ---- View: one phase opened ----
+  // ---- Breadcrumb wayfinding ----
+  function breadcrumbHtml(segments) {
+    return (
+      '<nav class="crumbs" aria-label="Breadcrumb">' +
+      segments
+        .map(function (seg, i) {
+          const sep = i > 0 ? '<span class="crumb-sep" aria-hidden="true">›</span>' : "";
+          const last = i === segments.length - 1;
+          if (last || !seg.nav) {
+            return sep + '<span class="crumb-current" aria-current="page">' + seg.label + "</span>";
+          }
+          return sep + '<button class="crumb" type="button" data-nav="' + seg.nav + '">' + seg.label + "</button>";
+        })
+        .join("") +
+      "</nav>"
+    );
+  }
+  function wireCrumbs() {
+    document.querySelectorAll(".crumb[data-nav]").forEach(function (c) {
+      c.addEventListener("click", function () {
+        const nav = c.getAttribute("data-nav");
+        if (nav === "root") { state.openPhase = null; state.openSub = null; }
+        else if (nav === "phase") { state.openSub = null; }
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+  }
+
+  // ---- View: one phase opened (section cards) ----
   function renderPhaseDetail(phaseId) {
     const phase = PHASES.find(function (p) { return p.id === phaseId; });
     if (!phase) { state.openPhase = null; return renderTiles(); }
 
     const idx = PHASES.indexOf(phase) + 1;
     const count = phaseTotal(phase);
-    const total = phase.subphases.length;
 
-    const body = phase.subphases
+    // Every phase renders the same way: a list of section cards.
+    const cards = phase.subphases
       .map(function (sub, i) {
-        // Subphases with one-pager content become clickable section cards.
-        if (sub.onePager) {
-          return (
-            '<button class="subcard" type="button" data-sub="' + sub.id + '" style="--phase:' + phaseColor(phase.id) + '" ' +
-            'aria-label="Open one-pager: ' + sub.name + '">' +
-            '<span class="subcard-step">' + (i + 1) + "</span>" +
-            '<span class="subcard-text">' +
-            '<span class="subcard-name">' + sub.name + "</span>" +
-            '<span class="subcard-summary">' + sub.summary + "</span>" +
-            "</span>" +
-            '<span class="subcard-cta">' + plural(sub.resources.length) + " · One-pager →</span>" +
-            "</button>"
-          );
-        }
-        // Otherwise, list resources inline as before.
         return (
-          '<div class="subphase">' +
-          '<div class="subphase-name">' + sub.name + "</div>" +
-          sub.resources
-            .map(function (r) {
-              return resourceRow(Object.assign({}, r, { phaseId: phase.id, phaseName: phase.name }), false);
-            })
-            .join("") +
-          "</div>"
+          '<button class="subcard" type="button" data-sub="' + sub.id + '" style="--phase:' + phaseColor(phase.id) + '" ' +
+          'aria-label="Open: ' + sub.name + '">' +
+          '<span class="subcard-step">' + (i + 1) + "</span>" +
+          '<span class="subcard-text">' +
+          '<span class="subcard-name">' + sub.name + "</span>" +
+          '<span class="subcard-summary">' + (sub.summary || "") + "</span>" +
+          "</span>" +
+          '<span class="subcard-cta">' + plural(sub.resources.length) + " · Open →</span>" +
+          "</button>"
         );
       })
       .join("");
 
-    const hasSections = phase.subphases.some(function (s) { return s.onePager; });
-    const bodyWrap = hasSections ? '<div class="subcard-list">' + body + "</div>" : '<div class="detail-body">' + body + "</div>";
-
     document.getElementById("content").innerHTML =
+      breadcrumbHtml([{ label: "Process & Resources", nav: "root" }, { label: phase.name }]) +
       '<div class="phase-detail" style="--phase:' + phaseColor(phase.id) + '">' +
-      '<button class="back-link" type="button" id="back-to-phases">← All phases</button>' +
       '<header class="detail-head">' +
       '<span class="detail-icon">' + iconSvg(phase.id) + "</span>" +
       "<div>" +
@@ -253,13 +265,10 @@
       "</div>" +
       '<span class="detail-count">' + plural(count) + "</span>" +
       "</header>" +
-      bodyWrap +
+      '<div class="subcard-list">' + cards + "</div>" +
       "</div>";
 
-    document.getElementById("back-to-phases").addEventListener("click", function () {
-      state.openPhase = null;
-      render();
-    });
+    wireCrumbs();
     document.querySelectorAll(".subcard").forEach(function (card) {
       card.addEventListener("click", function () {
         state.openSub = card.getAttribute("data-sub");
@@ -273,61 +282,76 @@
   function renderOnePager(phaseId, subId) {
     const phase = PHASES.find(function (p) { return p.id === phaseId; });
     const sub = phase && phase.subphases.find(function (s) { return s.id === subId; });
-    if (!sub || !sub.onePager) { state.openSub = null; return renderPhaseDetail(phaseId); }
+    if (!sub) { state.openSub = null; return renderPhaseDetail(phaseId); }
 
-    const op = sub.onePager;
+    const op = sub.onePager || {};
     const stepIdx = phase.subphases.indexOf(sub) + 1;
     const color = phaseColor(phase.id);
 
-    const stats = (op.stats || [])
-      .map(function (s) {
-        return (
-          '<div class="op-stat">' +
-          '<dt>' + s.label + "</dt>" +
-          "<dd>" + s.value + "</dd>" +
-          "</div>"
-        );
-      })
-      .join("");
+    const tagged = sub.resources.map(function (r) {
+      return Object.assign({}, r, { phaseId: phase.id, phaseName: phase.name });
+    });
+    const primary = tagged[0];
+    const rest = tagged.slice(1);
 
-    const steps = (op.steps || [])
-      .map(function (st) { return "<li>" + st + "</li>"; })
-      .join("");
+    // #5 — lead with the primary "do this now" resource.
+    const startHere = primary
+      ? '<a class="op-start" href="' + primary.driveUrl + '" target="_blank" rel="noopener">' +
+        '<span class="op-start-label">Start here</span>' +
+        '<span class="op-start-title">' + primary.title + "</span>" +
+        '<span class="op-start-meta">' + primary.type + " · Open in Drive ↗</span>" +
+        "</a>"
+      : "";
 
-    const resources = sub.resources
-      .map(function (r) {
-        return resourceRow(Object.assign({}, r, { phaseId: phase.id, phaseName: phase.name }), false);
-      })
-      .join("");
+    const overview = op.overview ||
+      ("[Placeholder] This one-pager for " + sub.name + " will explain how this part of " +
+        phase.name + " works. Content to be added.");
+
+    const statsAside = (op.stats && op.stats.length)
+      ? '<aside class="op-stats-col"><h3 class="op-stats-title">Stats</h3><dl class="op-stats">' +
+        op.stats.map(function (s) { return '<div class="op-stat"><dt>' + s.label + "</dt><dd>" + s.value + "</dd></div>"; }).join("") +
+        "</dl></aside>"
+      : "";
+
+    const stepsSection = (op.steps && op.steps.length)
+      ? '<section class="op-section"><h3>Steps</h3><ol class="op-steps">' +
+        op.steps.map(function (st) { return "<li>" + st + "</li>"; }).join("") +
+        "</ol></section>"
+      : "";
+
+    const restSection = rest.length
+      ? '<section class="op-section"><h3>More in this section</h3>' +
+        rest.map(function (r) { return resourceRow(r, false); }).join("") +
+        "</section>"
+      : "";
 
     document.getElementById("content").innerHTML =
-      '<button class="back-link" type="button" id="back-to-phase">← ' + phase.name + "</button>" +
+      breadcrumbHtml([
+        { label: "Process & Resources", nav: "root" },
+        { label: phase.name, nav: "phase" },
+        { label: sub.name },
+      ]) +
       '<article class="onepager" style="--phase:' + color + '">' +
       '<header class="op-hero">' +
       '<span class="op-hero-icon">' + iconSvg(phase.id) + "</span>" +
       '<div class="op-hero-text">' +
       '<span class="op-kicker">' + phase.name + " · Step " + stepIdx + " of " + phase.subphases.length + "</span>" +
       "<h2>" + sub.name + "</h2>" +
-      '<p class="op-summary">' + sub.summary + "</p>" +
+      '<p class="op-summary">' + (sub.summary || "") + "</p>" +
       "</div>" +
       "</header>" +
       '<div class="op-body">' +
-      '<aside class="op-stats-col">' +
-      '<h3 class="op-stats-title">Stats</h3>' +
-      '<dl class="op-stats">' + stats + "</dl>" +
-      "</aside>" +
+      statsAside +
       '<div class="op-main">' +
-      '<section class="op-section"><h3>Overview</h3><p>' + op.overview + "</p></section>" +
-      '<section class="op-section"><h3>Steps</h3><ol class="op-steps">' + steps + "</ol></section>" +
-      '<section class="op-section"><h3>Templates &amp; resources</h3>' + resources + "</section>" +
+      startHere +
+      '<section class="op-section"><h3>Overview</h3><p>' + overview + "</p></section>" +
+      stepsSection +
+      restSection +
       "</div>" +
       "</div>" +
       "</article>";
 
-    document.getElementById("back-to-phase").addEventListener("click", function () {
-      state.openSub = null;
-      render();
-    });
+    wireCrumbs();
   }
 
   // ---- View: grouped (by type or by question) ----
@@ -416,16 +440,19 @@
       btn.classList.toggle("is-active", btn.getAttribute("data-section") === state.section);
     });
     const filterbar = document.getElementById("filterbar");
+    const browseHead = document.getElementById("browse-head");
 
     // Values & Culture is a standalone top-level section.
     if (state.section === "values") {
       filterbar.hidden = true;
+      if (browseHead) browseHead.hidden = true;
       renderValues();
       document.getElementById("result-count").textContent = "";
       document.getElementById("clear-filter").hidden = true;
       return;
     }
     filterbar.hidden = false;
+    if (browseHead) browseHead.hidden = false;
 
     // Filter bar active state.
     document.querySelectorAll(".filter-btn").forEach(function (btn) {
@@ -497,6 +524,9 @@
   document.querySelectorAll(".topnav-btn").forEach(function (btn) {
     btn.addEventListener("click", function () {
       state.section = btn.getAttribute("data-section");
+      // Returning to a top-level section lands on its index, not a deep view.
+      state.openPhase = null;
+      state.openSub = null;
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
