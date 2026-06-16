@@ -1,0 +1,12 @@
+# Dependencies / caches
+node_modules/
+.npm/
+.cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.log

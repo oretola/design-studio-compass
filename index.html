@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DJDS Design Studio Compass</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Sign-in gate -->
+  <div id="gate" class="gate">
+    <form id="gate-form" class="gate-card">
+      <h1>Design Studio Compass</h1>
+      <p class="gate-sub">DJDS internal resource hub — enter the shared team password.</p>
+      <input type="password" id="gate-input" placeholder="Team password" autocomplete="off" />
+      <button type="submit">Sign in</button>
+      <p id="gate-error" class="gate-error" hidden>That password didn't match. Try again.</p>
+    </form>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="app" class="app" hidden>
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-mark">◆</span>
+        <div>
+          <h1>Design Studio Compass</h1>
+          <p class="brand-sub">Find the right template, guide, or resource — organized around how we work.</p>
+        </div>
+      </div>
+      <input type="search" id="search" class="search" placeholder="Search resources…" />
+    </header>
+
+    <section class="shortcuts">
+      <span class="shortcuts-label">Jump to what you need:</span>
+      <div id="shortcuts-row" class="shortcuts-row"></div>
+    </section>
+
+    <nav class="views">
+      <button class="view-btn is-active" data-view="phase">By phase</button>
+      <button class="view-btn" data-view="type">By type</button>
+      <button class="view-btn" data-view="need">By need</button>
+      <button id="clear-filter" class="clear-filter" hidden>Clear filter ✕</button>
+    </nav>
+
+    <main id="content" class="content"></main>
+
+    <footer class="app-footer">
+      Placeholder demo data · Files live in Google Drive · DJDS Design Studio
+    </footer>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
