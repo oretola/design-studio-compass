@@ -54,6 +54,19 @@ const ETHOS = [
   { title: "Keep learning", body: "[Placeholder] How we grow and adapt — to be written by the studio." },
 ];
 
+// ---- Design Studio Calendar — placeholder upcoming events ----
+// Dates are expressed as offsets in days from "today" so the prototype always
+// shows upcoming events. All titles are placeholder.
+const EVENTS = [
+  { title: "All-Studio Meeting", kind: "Meeting", inDays: 0, time: "10:00 AM" },
+  { title: "Design Critique", kind: "Critique", inDays: 2, time: "2:00 PM" },
+  { title: "Community Workshop — Project Aspen", kind: "Workshop", inDays: 5, time: "5:30 PM" },
+  { title: "Studio Pin-Up", kind: "Review", inDays: 9, time: "11:00 AM" },
+  { title: "Lunch & Learn — Materials", kind: "Learning", inDays: 14, time: "12:00 PM" },
+  { title: "Client Presentation — Project Cedar", kind: "Presentation", inDays: 21, time: "3:00 PM" },
+  { title: "Site Visit — LOVE Building", kind: "Site Visit", inDays: 28, time: "9:00 AM" },
+];
+
 // The 7 phases of the DJDS architecture design process.
 // Concept Development is fully fleshed out with 4 subphases for v1;
 // the others carry a few sample resources each.

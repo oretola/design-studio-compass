@@ -62,6 +62,7 @@
     needFilter: null,   // need id when filtering via a question chip
     openPhase: null,    // phase id when a tile is opened
     openSub: null,      // subphase id when a one-pager is opened
+    calOffset: 0,       // months from the current month, for the calendar view
   };
 
   // ---- Sign-in gate ----
@@ -480,6 +481,84 @@
       "</section>";
   }
 
+  // ---- View: Design Studio Calendar (top-level) ----
+  function renderCalendar() {
+    const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    // Resolve placeholder events (day offsets) to real dates anchored to today.
+    const events = EVENTS.map(function (e) {
+      return {
+        title: e.title,
+        kind: e.kind,
+        time: e.time,
+        date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + e.inDays),
+      };
+    });
+
+    function sameDay(a, b) {
+      return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    }
+
+    // Month being viewed.
+    const view = new Date(today.getFullYear(), today.getMonth() + state.calOffset, 1);
+    const vy = view.getFullYear();
+    const vm = view.getMonth();
+    const firstWeekday = view.getDay();
+    const daysInMonth = new Date(vy, vm + 1, 0).getDate();
+
+    let cells = WD.map(function (w) { return '<div class="cal-wd">' + w + "</div>"; }).join("");
+    for (let i = 0; i < firstWeekday; i++) cells += '<div class="cal-cell cal-empty"></div>';
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dayDate = new Date(vy, vm, d);
+      const isToday = sameDay(dayDate, today);
+      const evs = events.filter(function (ev) { return sameDay(ev.date, dayDate); });
+      const labels = evs.map(function (ev) { return '<span class="cal-ev">' + ev.title + "</span>"; }).join("");
+      cells +=
+        '<div class="cal-cell' + (isToday ? " is-today" : "") + (evs.length ? " has-ev" : "") + '">' +
+        '<span class="cal-num">' + d + "</span>" +
+        labels +
+        "</div>";
+    }
+
+    const upcoming = events
+      .filter(function (ev) { return ev.date >= today; })
+      .sort(function (a, b) { return a.date - b.date; });
+    const upcomingHtml = upcoming
+      .map(function (ev) {
+        return (
+          '<div class="cal-up">' +
+          '<span class="cal-up-date"><span class="cal-up-mon">' + MONTHS[ev.date.getMonth()].slice(0, 3) + "</span>" +
+          '<span class="cal-up-day">' + ev.date.getDate() + "</span></span>" +
+          '<span class="cal-up-text"><span class="cal-up-title">' + ev.title + "</span>" +
+          '<span class="cal-up-meta">' + ev.time + " · " + ev.kind + "</span></span>" +
+          "</div>"
+        );
+      })
+      .join("");
+
+    document.getElementById("content").innerHTML =
+      '<section class="calendar">' +
+      '<div class="cal-head">' +
+      '<h2 class="cal-title">Design Studio Calendar ' + phTag() + "</h2>" +
+      '<div class="cal-nav">' +
+      '<button class="cal-navbtn" id="cal-prev" type="button" aria-label="Previous month">‹</button>' +
+      '<span class="cal-month">' + MONTHS[vm] + " " + vy + "</span>" +
+      '<button class="cal-navbtn" id="cal-next" type="button" aria-label="Next month">›</button>' +
+      "</div>" +
+      "</div>" +
+      '<div class="cal-grid">' + cells + "</div>" +
+      '<h3 class="cal-up-head">Upcoming events</h3>' +
+      '<div class="cal-up-list">' + (upcomingHtml || '<p class="op-empty">No upcoming events.</p>') + "</div>" +
+      "</section>";
+
+    document.getElementById("cal-prev").addEventListener("click", function () { state.calOffset -= 1; render(); });
+    document.getElementById("cal-next").addEventListener("click", function () { state.calOffset += 1; render(); });
+  }
+
   // ---- Main render ----
   function render() {
     // Top-level section active state.
@@ -489,11 +568,12 @@
     const filterbar = document.getElementById("filterbar");
     const browseHead = document.getElementById("browse-head");
 
-    // Values & Culture is a standalone top-level section.
-    if (state.section === "values") {
+    // Values & Culture and the Calendar are standalone top-level sections.
+    if (state.section === "values" || state.section === "calendar") {
       filterbar.hidden = true;
       if (browseHead) browseHead.hidden = true;
-      renderValues();
+      if (state.section === "values") renderValues();
+      else renderCalendar();
       document.getElementById("result-count").textContent = "";
       document.getElementById("clear-filter").hidden = true;
       return;
@@ -574,6 +654,7 @@
       // Returning to a top-level section lands on its index, not a deep view.
       state.openPhase = null;
       state.openSub = null;
+      state.calOffset = 0;
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
