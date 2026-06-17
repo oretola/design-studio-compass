@@ -678,4 +678,77 @@
   });
 
   document.getElementById("clear-filter").addEventListener("click", clearAll);
+
+  // ---- Placeholder AI assistant (future integration) ----
+  (function initChat() {
+    const fab = document.getElementById("chat-fab");
+    const panel = document.getElementById("chat-panel");
+    const closeBtn = document.getElementById("chat-close");
+    const messages = document.getElementById("chat-messages");
+    const suggests = document.getElementById("chat-suggests");
+    const form = document.getElementById("chat-form");
+    const input = document.getElementById("chat-text");
+    if (!fab || !panel) return;
+
+    const SUGGESTIONS = [
+      "How do I start a new project?",
+      "Where are the cost estimate templates?",
+      "What happens during Entitlements & Approvals?",
+    ];
+    const INTRO = "Hi! I'm the Design Studio Assistant — coming soon. Tell me what you're trying to do and I'll point you to the right phase, template, or example.";
+    const CANNED = "[Placeholder] I'm not connected to a real assistant yet. In the future I'll answer directly and link you to the right phase, template, or example. For now, use the tabs above to browse.";
+    let seeded = false;
+
+    function addMessage(role, text) {
+      const el = document.createElement("div");
+      el.className = "chat-msg chat-msg-" + role;
+      el.textContent = text;
+      messages.appendChild(el);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function renderSuggestions() {
+      suggests.innerHTML = SUGGESTIONS.map(function (s) {
+        return '<button class="chat-suggest" type="button">' + s + "</button>";
+      }).join("");
+      suggests.querySelectorAll(".chat-suggest").forEach(function (b) {
+        b.addEventListener("click", function () { sendMessage(b.textContent); });
+      });
+    }
+
+    function seed() {
+      if (seeded) return;
+      seeded = true;
+      addMessage("assistant", INTRO);
+      renderSuggestions();
+    }
+
+    function sendMessage(text) {
+      text = (text || "").trim();
+      if (!text) return;
+      addMessage("user", text);
+      input.value = "";
+      suggests.hidden = true;
+      addMessage("assistant", CANNED);
+    }
+
+    function openChat() {
+      seed();
+      panel.hidden = false;
+      fab.setAttribute("aria-expanded", "true");
+      input.focus();
+    }
+    function closeChat() {
+      panel.hidden = true;
+      fab.setAttribute("aria-expanded", "false");
+      fab.focus();
+    }
+
+    fab.addEventListener("click", function () { if (panel.hidden) openChat(); else closeChat(); });
+    closeBtn.addEventListener("click", closeChat);
+    form.addEventListener("submit", function (e) { e.preventDefault(); sendMessage(input.value); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !panel.hidden) closeChat();
+    });
+  })();
 })();

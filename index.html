@@ -104,6 +104,37 @@
     <footer class="app-footer">
       Placeholder demo data · Files live in Google Drive · DJDS Design Studio
     </footer>
+
+    <!-- Placeholder AI assistant (future integration) -->
+    <button id="chat-fab" class="chat-fab" type="button" aria-label="Open the Design Studio Assistant" aria-expanded="false">
+      <span class="chat-fab-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L3 20l1.1-5A8.5 8.5 0 1 1 21 11.5z"/></svg>
+      </span>
+      <span class="chat-fab-text">Ask</span>
+    </button>
+
+    <div id="chat-panel" class="chat-panel" role="dialog" aria-label="Design Studio Assistant" hidden>
+      <header class="chat-header">
+        <div class="chat-id">
+          <span class="chat-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L3 20l1.1-5A8.5 8.5 0 1 1 21 11.5z"/></svg>
+          </span>
+          <div>
+            <span class="chat-name">Design Studio Assistant</span>
+            <span class="chat-status">Preview <span class="ph-tag">Placeholder</span></span>
+          </div>
+        </div>
+        <button id="chat-close" class="chat-close" type="button" aria-label="Close assistant">✕</button>
+      </header>
+      <div id="chat-messages" class="chat-messages" aria-live="polite"></div>
+      <div id="chat-suggests" class="chat-suggests"></div>
+      <form id="chat-form" class="chat-input">
+        <input id="chat-text" type="text" placeholder="Ask what you need…" autocomplete="off" aria-label="Message the assistant" />
+        <button type="submit" class="chat-send" aria-label="Send message">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l16-8-6 16-3-7-7-1z"/></svg>
+        </button>
+      </form>
+    </div>
   </div>
 
   <script src="data.js"></script>
