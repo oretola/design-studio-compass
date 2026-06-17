@@ -113,6 +113,33 @@ body {
 .gate-card button:hover { background: var(--accent-deep); }
 .gate-error { color: var(--accent); font-size: 0.9rem; margin: 12px 0 0; }
 
+/* ============ Prototype banner + placeholder tags ============ */
+.proto-banner {
+  background: color-mix(in srgb, var(--accent) 14%, var(--card));
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  color: var(--ink-soft);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  margin-bottom: 22px;
+}
+.proto-banner strong { color: var(--accent-deep); }
+.ph-tag {
+  display: inline-block;
+  vertical-align: middle;
+  font-family: "Raleway", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  background: var(--chip-bg);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 2px 7px;
+  margin-left: 6px;
+}
+
 /* ============ App shell ============ */
 .app { max-width: 1080px; margin: 0 auto; padding: 32px 24px 48px; }
 
@@ -489,6 +516,45 @@ body {
 }
 .op-start-title { display: block; font-size: 1.05rem; font-weight: 600; color: var(--ink); margin: 3px 0 2px; }
 .op-start-meta { display: block; font-size: 0.82rem; color: var(--muted); }
+
+/* Case studies & examples */
+.op-section-note { margin: -6px 0 12px; font-size: 0.85rem; color: var(--muted); }
+.op-empty { color: var(--muted); font-style: italic; font-size: 0.9rem; margin: 0; }
+.example-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink);
+}
+.example-row:last-child { border-bottom: none; }
+.example-tag {
+  flex: none;
+  font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  background: var(--phase, var(--accent));
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.example-kind {
+  flex: none;
+  font-size: 0.72rem; font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.example-title { font-weight: 500; }
+.example-open {
+  margin-left: auto;
+  flex: none;
+  font-size: 0.85rem; font-weight: 500;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.example-row:hover .example-open { text-decoration: underline; }
+.example-row:hover .example-title { color: var(--accent-deep); }
 .op-section { margin-bottom: 28px; }
 .op-section:last-child { margin-bottom: 0; }
 .op-section h3 {
@@ -691,6 +757,52 @@ body {
 }
 .culture-title { font-size: 0.98rem; font-weight: 600; margin: 0 0 4px; }
 .culture-body { margin: 0; color: var(--muted); font-size: 0.88rem; }
+
+.values-note { margin: -6px 0 14px; font-size: 0.85rem; color: var(--muted); }
+
+/* Design Studio Ethos — hover squares */
+.ethos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+.ethos-square {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--accent);
+  border-radius: 14px;
+  background: var(--card);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  cursor: default;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.ethos-square:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
+.ethos-square:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ethos-title {
+  font-family: "Raleway", sans-serif;
+  font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+.ethos-reveal {
+  position: absolute;
+  inset: 0;
+  padding: 16px;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.ethos-square:hover .ethos-reveal,
+.ethos-square:focus-visible .ethos-reveal { opacity: 1; transform: translateY(0); }
+.ethos-body { font-size: 0.9rem; line-height: 1.4; }
 
 /* ============ Footer ============ */
 .app-footer {

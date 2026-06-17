@@ -4,7 +4,9 @@
 const TEAM_PASSWORD = "DJDS2026";
 
 // Resource types used for the "By type" view and filter chips.
-const TYPES = ["Template", "Guide", "Checklist", "Example", "Tool"];
+// "Case Study" = finished work from past projects (decks, drawings, renderings,
+// diagrams) shown as examples of how something is done at a given phase.
+const TYPES = ["Template", "Guide", "Checklist", "Tool", "Example", "Case Study"];
 
 // Task-based shortcuts for the "jump to what you need" row and "By need" view.
 const NEEDS = [
@@ -37,6 +39,19 @@ const CULTURE = [
   { title: "We work in the open", body: "Process, drafts, and rationale stay visible so anyone can pick up the thread." },
   { title: "We make room to learn", body: "Questions are welcome; nobody is expected to know everything." },
   { title: "We protect the mission", body: "We choose projects and partners that advance justice — and we can say no." },
+];
+
+// Design Studio Ethos — 8 placeholder hover squares on the Values page.
+// All titles and descriptions are placeholder text.
+const ETHOS = [
+  { title: "Listen first", body: "[Placeholder] How we lead with listening — to be written by the studio." },
+  { title: "Share power", body: "[Placeholder] How we share decision-making — to be written by the studio." },
+  { title: "Design with joy", body: "[Placeholder] How joy shows up in our work — to be written by the studio." },
+  { title: "Sweat the details", body: "[Placeholder] How craft and care guide us — to be written by the studio." },
+  { title: "Leave it better", body: "[Placeholder] How we leave places and people better — to be written by the studio." },
+  { title: "Stay accountable", body: "[Placeholder] How we hold ourselves accountable — to be written by the studio." },
+  { title: "Build together", body: "[Placeholder] How we collaborate across roles — to be written by the studio." },
+  { title: "Keep learning", body: "[Placeholder] How we grow and adapt — to be written by the studio." },
 ];
 
 // The 7 phases of the DJDS architecture design process.
@@ -73,6 +88,10 @@ const PHASES = [
           { title: "Site Analysis Checklist", type: "Checklist", needs: ["start-project"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-site-analysis" },
           { title: "Community Engagement Guide", type: "Guide", needs: ["client-meeting"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-engagement" },
         ],
+        examples: [
+          { title: "[Placeholder] Predesign findings deck — Project Aspen", kind: "Presentation", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-ex-predesign-deck" },
+          { title: "[Placeholder] Site & context analysis diagram — Project Birch", kind: "Diagram", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-ex-site-diagram" },
+        ],
       },
       {
         id: "ideation",
@@ -97,6 +116,10 @@ const PHASES = [
         resources: [
           { title: "Vision Workshop Deck", type: "Template", needs: ["client-meeting", "present-design"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-vision-deck" },
           { title: "Precedent Study Examples", type: "Example", needs: ["present-design"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-precedents" },
+        ],
+        examples: [
+          { title: "[Placeholder] Visioning workshop output — Project Cedar", kind: "Presentation", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-ex-vision-output" },
+          { title: "[Placeholder] Concept options board — Project Cedar", kind: "Diagram", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-ex-options-board" },
         ],
       },
       {
@@ -124,6 +147,10 @@ const PHASES = [
           { title: "Massing Study Guide", type: "Guide", needs: ["present-design"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-massing" },
           { title: "Rough Order Cost Estimate", type: "Tool", needs: ["cost-estimate"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-rom-cost" },
         ],
+        examples: [
+          { title: "[Placeholder] Concept massing rendering — Project Dogwood", kind: "Rendering", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-ex-massing-render" },
+          { title: "[Placeholder] Integrated concept diagram — Project Dogwood", kind: "Diagram", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-ex-integrated-diagram" },
+        ],
       },
       {
         id: "final-concept",
@@ -148,6 +175,10 @@ const PHASES = [
         resources: [
           { title: "Design Review Checklist", type: "Checklist", needs: ["present-design"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-review-checklist" },
           { title: "Client Presentation Template", type: "Template", needs: ["present-design", "client-meeting"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-client-present" },
+        ],
+        examples: [
+          { title: "[Placeholder] Final concept presentation — Project Elm", kind: "Presentation", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-ex-final-deck" },
+          { title: "[Placeholder] Concept design drawing set — Project Elm", kind: "Drawing set", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-ex-drawing-set" },
         ],
       },
     ],

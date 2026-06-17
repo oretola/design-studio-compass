@@ -103,11 +103,20 @@
   syncThemeButton();
 
   // ---- Data helpers ----
+  // Templates/guides + case-study examples, flattened. Examples are tagged
+  // with the "Case Study" type so they surface in By type / search too.
+  function subItems(sub) {
+    const examples = (sub.examples || []).map(function (e) {
+      return { title: e.title, type: "Case Study", kind: e.kind, needs: [], driveUrl: e.driveUrl };
+    });
+    return sub.resources.concat(examples);
+  }
+
   function allResources() {
     const out = [];
     PHASES.forEach(function (phase) {
       phase.subphases.forEach(function (sub) {
-        sub.resources.forEach(function (r) {
+        subItems(sub).forEach(function (r) {
           out.push(Object.assign({}, r, {
             phaseId: phase.id,
             phaseName: phase.name,
@@ -130,10 +139,13 @@
   }
 
   function phaseTotal(phase) {
-    return phase.subphases.reduce(function (n, s) { return n + s.resources.length; }, 0);
+    return phase.subphases.reduce(function (n, s) { return n + subItems(s).length; }, 0);
   }
 
   function plural(n) { return n === 1 ? "1 resource" : n + " resources"; }
+
+  // Small inline marker so generated/sample text is never mistaken for real content.
+  function phTag() { return '<span class="ph-tag">Placeholder</span>'; }
 
   // ---- Render: a single resource row (optionally tagged with its phase) ----
   function resourceRow(r, showPhase) {
@@ -247,7 +259,7 @@
           '<span class="subcard-name">' + sub.name + "</span>" +
           '<span class="subcard-summary">' + (sub.summary || "") + "</span>" +
           "</span>" +
-          '<span class="subcard-cta">' + plural(sub.resources.length) + " · Open →</span>" +
+          '<span class="subcard-cta">' + plural(subItems(sub).length) + " · Open →</span>" +
           "</button>"
         );
       })
@@ -325,6 +337,27 @@
         "</section>"
       : "";
 
+    // Case studies & examples — finished work showing how this is done at this phase.
+    const exampleRows = (sub.examples || [])
+      .map(function (e) {
+        return (
+          '<a class="example-row" href="' + e.driveUrl + '" target="_blank" rel="noopener">' +
+          '<span class="example-tag">Example</span>' +
+          '<span class="example-kind">' + e.kind + "</span>" +
+          '<span class="example-title">' + e.title + "</span>" +
+          '<span class="example-open">Open in Drive ↗</span>' +
+          "</a>"
+        );
+      })
+      .join("");
+    const examplesSection =
+      '<section class="op-section op-examples">' +
+      "<h3>Case studies &amp; examples</h3>" +
+      '<p class="op-section-note">Finished work from past projects — examples of how this is done during ' +
+      phase.name + ". " + phTag() + "</p>" +
+      (exampleRows || '<p class="op-empty">[Placeholder] Examples for this phase will be added here.</p>') +
+      "</section>";
+
     document.getElementById("content").innerHTML =
       breadcrumbHtml([
         { label: "Process & Resources", nav: "root" },
@@ -347,6 +380,7 @@
       '<section class="op-section"><h3>Overview</h3><p>' + overview + "</p></section>" +
       stepsSection +
       restSection +
+      examplesSection +
       "</div>" +
       "</div>" +
       "</article>";
@@ -410,6 +444,16 @@
       );
     }).join("");
 
+    // Design Studio Ethos — 8 hover squares (reveal on hover/focus).
+    const ethosSquares = ETHOS.map(function (e) {
+      return (
+        '<div class="ethos-square" tabindex="0">' +
+        '<span class="ethos-title">' + e.title + "</span>" +
+        '<span class="ethos-reveal" aria-hidden="true"><span class="ethos-body">' + e.body + "</span></span>" +
+        "</div>"
+      );
+    }).join("");
+
     const cultureCards = CULTURE.map(function (c) {
       return (
         '<div class="culture-item">' +
@@ -422,13 +466,16 @@
     document.getElementById("content").innerHTML =
       '<section class="values">' +
       '<div class="values-intro">' +
-      '<span class="values-kicker">' + VALUES_INTRO.kicker + "</span>" +
+      '<span class="values-kicker">' + VALUES_INTRO.kicker + " " + phTag() + "</span>" +
       '<h2 class="values-statement">' + VALUES_INTRO.statement + "</h2>" +
       '<p class="values-lead">' + VALUES_INTRO.body + "</p>" +
       "</div>" +
-      '<h3 class="values-section-head">Our values</h3>' +
+      '<h3 class="values-section-head">Our values ' + phTag() + "</h3>" +
       '<div class="value-grid">' + valueCards + "</div>" +
-      '<h3 class="values-section-head">Our culture</h3>' +
+      '<h3 class="values-section-head">Design Studio Ethos ' + phTag() + "</h3>" +
+      '<p class="values-note">Hover (or focus) a square to read more.</p>' +
+      '<div class="ethos-grid">' + ethosSquares + "</div>" +
+      '<h3 class="values-section-head">Our culture ' + phTag() + "</h3>" +
       '<div class="culture-grid">' + cultureCards + "</div>" +
       "</section>";
   }
@@ -466,7 +513,7 @@
       else if (state.openPhase) renderPhaseDetail(state.openPhase);
       else renderTiles();
     } else if (state.view === "type") {
-      renderGrouped("type", TYPES, function (t) { return t + "s"; });
+      renderGrouped("type", TYPES, function (t) { return t === "Case Study" ? "Case studies &amp; examples" : t + "s"; });
     } else if (state.view === "question") {
       renderGrouped("need", NEEDS.map(function (n) { return n.id; }), function (id) {
         const n = NEEDS.find(function (x) { return x.id === id; });
