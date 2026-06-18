@@ -556,17 +556,6 @@
 
     const rules = (std.rules || []).map(function (r) { return "<li>" + r + "</li>"; }).join("");
 
-    const exampleRows = (std.examples || []).map(function (e) {
-      return (
-        '<a class="example-row" href="' + e.driveUrl + '" target="_blank" rel="noopener">' +
-        '<span class="example-tag">Example</span>' +
-        '<span class="example-kind">' + e.kind + "</span>" +
-        '<span class="example-title">' + e.title + "</span>" +
-        '<span class="example-open">Open in Drive ↗</span>' +
-        "</a>"
-      );
-    }).join("");
-
     const usedIn = (std.usedIn || [])
       .map(function (pid) {
         const p = PHASES.find(function (x) { return x.id === pid; });
@@ -595,11 +584,9 @@
       "</section>" +
       '<section class="op-section"><h3>Style &amp; standards</h3><ul class="std-rules">' + rules + "</ul></section>" +
       '<section class="op-section"><h3>Style exemplar</h3>' +
+      '<p class="op-section-note">The reference for what good looks like. For real project examples, see the phases below. ' + phTag() + "</p>" +
       '<div class="std-exemplar">[Placeholder] Example image of our ' + std.name.toLowerCase() + " style.</div></section>" +
-      '<section class="op-section"><h3>Case studies &amp; examples</h3>' +
-      (exampleRows || '<p class="op-empty">[Placeholder] Examples will be added here.</p>') +
-      "</section>" +
-      (usedIn ? '<section class="op-section"><h3>Used in</h3><div class="usedin-row">' + usedIn + "</div></section>" : "") +
+      (usedIn ? '<section class="op-section"><h3>Used in — see examples in these phases</h3><div class="usedin-row">' + usedIn + "</div></section>" : "") +
       "</div>" +
       "</div>" +
       "</article>";
@@ -789,11 +776,14 @@
   document.querySelectorAll(".topnav-btn").forEach(function (btn) {
     btn.addEventListener("click", function () {
       state.section = btn.getAttribute("data-section");
-      // Returning to a top-level section lands on its index, not a deep view.
+      // Returning to a top-level section lands on its clean index, not a deep
+      // view or a stale filter.
       state.openPhase = null;
       state.openSub = null;
       state.openStandard = null;
       state.calOffset = 0;
+      state.view = "phase";
+      state.needFilter = null;
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });

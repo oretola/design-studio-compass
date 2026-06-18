@@ -6,7 +6,7 @@ const TEAM_PASSWORD = "DJDS2026";
 // Resource types used for the "By type" view and filter chips.
 // "Case Study" = finished work from past projects (decks, drawings, renderings,
 // diagrams) shown as examples of how something is done at a given phase.
-const TYPES = ["Template", "Guide", "Checklist", "Tool", "Example", "Case Study"];
+const TYPES = ["Template", "Guide", "Checklist", "Tool", "Case Study"];
 
 // Task-based shortcuts for the "jump to what you need" row and "By need" view.
 const NEEDS = [
@@ -87,9 +87,6 @@ const STANDARDS = [
       "[Placeholder] Use consistent line weights — to be defined by the studio.",
       "[Placeholder] Keep annotations minimal; label only key volumes.",
     ],
-    examples: [
-      { title: "[Placeholder] Massing diagram — Project Dogwood", kind: "Diagram", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-ex-massing" },
-    ],
     usedIn: ["concept", "schematic"],
   },
   {
@@ -107,9 +104,6 @@ const STANDARDS = [
       "[Placeholder] Use the studio program color key consistently across projects.",
       "[Placeholder] Size blocks to relative area where possible.",
       "[Placeholder] Show adjacencies with simple connectors.",
-    ],
-    examples: [
-      { title: "[Placeholder] Program diagram — Project Cedar", kind: "Diagram", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-ex-program" },
     ],
     usedIn: ["concept", "schematic"],
   },
@@ -129,9 +123,6 @@ const STANDARDS = [
       "[Placeholder] Show diverse, real-feeling people at human scale.",
       "[Placeholder] Use the studio entourage and color treatment.",
     ],
-    examples: [
-      { title: "[Placeholder] Interior rendering — LOVE Building", kind: "Rendering", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-ex-render" },
-    ],
     usedIn: ["concept", "design-dev"],
   },
   {
@@ -150,9 +141,6 @@ const STANDARDS = [
       "[Placeholder] Poché walls per standard; keep north arrow + scale bar.",
       "[Placeholder] Consistent room labels and font sizes.",
     ],
-    examples: [
-      { title: "[Placeholder] Level 1 plan — Project Birch", kind: "Drawing set", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-ex-plan" },
-    ],
     usedIn: ["schematic", "design-dev", "construction-docs"],
   },
   {
@@ -170,9 +158,6 @@ const STANDARDS = [
       "[Placeholder] Lead with the story; one idea per slide.",
       "[Placeholder] Use brand colors and Raleway throughout.",
       "[Placeholder] Caption every image; credit the community.",
-    ],
-    examples: [
-      { title: "[Placeholder] Concept presentation — Project Elm", kind: "Presentation", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-ex-deck" },
     ],
     usedIn: ["concept", "design-dev"],
   },
@@ -239,7 +224,7 @@ const PHASES = [
         },
         resources: [
           { title: "Vision Workshop Deck", type: "Template", needs: ["client-meeting", "present-design"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-vision-deck" },
-          { title: "Precedent Study Examples", type: "Example", needs: ["present-design"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-precedents" },
+          { title: "Precedent Study Examples", type: "Guide", needs: ["present-design"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-precedents" },
         ],
         examples: [
           { title: "[Placeholder] Visioning workshop output — Project Cedar", kind: "Presentation", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-ex-vision-output" },
