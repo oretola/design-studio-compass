@@ -67,6 +67,117 @@ const EVENTS = [
   { title: "Site Visit — LOVE Building", kind: "Site Visit", inDays: 28, time: "9:00 AM" },
 ];
 
+// ---- Studio Standards — deliverable templates + style guidance ----
+// Organized by deliverable type (cuts across phases). All content placeholder.
+// Each `template` is the single canonical/latest source of truth.
+const STANDARDS = [
+  {
+    id: "massing",
+    name: "Massing Diagram",
+    summary: "How we show building volume, scale, and site relationships.",
+    template: { title: "Massing Diagram Template", version: "v3", updated: "Jun 2026", owner: "Studio Standards Lead", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-massing-template" },
+    specs: [
+      { label: "Software", value: "Rhino + Illustrator" },
+      { label: "File format", value: ".ai / .pdf" },
+      { label: "Color palette", value: "DJDS greys + teal accent" },
+      { label: "Typeface", value: "Raleway" },
+    ],
+    rules: [
+      "[Placeholder] Show context massing in light grey; subject volume in solid tone.",
+      "[Placeholder] Use consistent line weights — to be defined by the studio.",
+      "[Placeholder] Keep annotations minimal; label only key volumes.",
+    ],
+    examples: [
+      { title: "[Placeholder] Massing diagram — Project Dogwood", kind: "Diagram", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-ex-massing" },
+    ],
+    usedIn: ["concept", "schematic"],
+  },
+  {
+    id: "program",
+    name: "Program Diagram",
+    summary: "How we communicate spaces, adjacencies, and program areas.",
+    template: { title: "Program Diagram Template", version: "v2", updated: "May 2026", owner: "Studio Standards Lead", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-program-template" },
+    specs: [
+      { label: "Software", value: "Illustrator" },
+      { label: "File format", value: ".ai / .pdf" },
+      { label: "Color palette", value: "Program color key (placeholder)" },
+      { label: "Typeface", value: "Raleway" },
+    ],
+    rules: [
+      "[Placeholder] Use the studio program color key consistently across projects.",
+      "[Placeholder] Size blocks to relative area where possible.",
+      "[Placeholder] Show adjacencies with simple connectors.",
+    ],
+    examples: [
+      { title: "[Placeholder] Program diagram — Project Cedar", kind: "Diagram", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-ex-program" },
+    ],
+    usedIn: ["concept", "schematic"],
+  },
+  {
+    id: "rendering",
+    name: "Rendering",
+    summary: "Our house style for renderings — mood, color, people, and entourage.",
+    template: { title: "Rendering Style Kit", version: "v4", updated: "Jun 2026", owner: "Visualization Lead", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-rendering-kit" },
+    specs: [
+      { label: "Software", value: "Enscape / Photoshop" },
+      { label: "File format", value: ".psd / .jpg" },
+      { label: "Mood", value: "Warm, inclusive, daylit (placeholder)" },
+      { label: "Entourage", value: "Studio people library" },
+    ],
+    rules: [
+      "[Placeholder] Warm, natural light; avoid heavy post-processing.",
+      "[Placeholder] Show diverse, real-feeling people at human scale.",
+      "[Placeholder] Use the studio entourage and color treatment.",
+    ],
+    examples: [
+      { title: "[Placeholder] Interior rendering — LOVE Building", kind: "Rendering", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-ex-render" },
+    ],
+    usedIn: ["concept", "design-dev"],
+  },
+  {
+    id: "plan-graphics",
+    name: "Plan Graphics",
+    summary: "Standards for plan drawings — line weights, poché, scale, and labels.",
+    template: { title: "Plan Graphics Standard", version: "v5", updated: "Apr 2026", owner: "Studio Standards Lead", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-plan-graphics" },
+    specs: [
+      { label: "Software", value: "Revit + Illustrator" },
+      { label: "File format", value: ".dwg / .pdf" },
+      { label: "Line weights", value: "Studio pen set (placeholder)" },
+      { label: "Typeface", value: "Raleway" },
+    ],
+    rules: [
+      "[Placeholder] Use the studio pen/line-weight set for hierarchy.",
+      "[Placeholder] Poché walls per standard; keep north arrow + scale bar.",
+      "[Placeholder] Consistent room labels and font sizes.",
+    ],
+    examples: [
+      { title: "[Placeholder] Level 1 plan — Project Birch", kind: "Drawing set", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-ex-plan" },
+    ],
+    usedIn: ["schematic", "design-dev", "construction-docs"],
+  },
+  {
+    id: "presentation",
+    name: "Presentation Deck",
+    summary: "Our deck template and layout standards for client and community presentations.",
+    template: { title: "Presentation Deck Template", version: "v6", updated: "Jun 2026", owner: "Studio Standards Lead", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-deck-template" },
+    specs: [
+      { label: "Software", value: "Figma / PowerPoint" },
+      { label: "Aspect ratio", value: "16:9" },
+      { label: "Color palette", value: "DJDS brand" },
+      { label: "Typeface", value: "Raleway" },
+    ],
+    rules: [
+      "[Placeholder] Lead with the story; one idea per slide.",
+      "[Placeholder] Use brand colors and Raleway throughout.",
+      "[Placeholder] Caption every image; credit the community.",
+    ],
+    examples: [
+      { title: "[Placeholder] Concept presentation — Project Elm", kind: "Presentation", driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-std-ex-deck" },
+    ],
+    usedIn: ["concept", "design-dev"],
+  },
+];
+
 // The 7 phases of the DJDS architecture design process.
 // Concept Development is fully fleshed out with 4 subphases for v1;
 // the others carry a few sample resources each.

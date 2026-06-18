@@ -62,8 +62,26 @@
     needFilter: null,   // need id when filtering via a question chip
     openPhase: null,    // phase id when a tile is opened
     openSub: null,      // subphase id when a one-pager is opened
+    openStandard: null, // standard id when a standard page is opened
     calOffset: 0,       // months from the current month, for the calendar view
   };
+
+  // Icons for Studio Standards (deliverable types).
+  const STD_ICON = {
+    "massing": '<path d="M12 3l8 4.5L12 12 4 7.5z"/><path d="M4 12l8 4.5L20 12"/><path d="M4 16.5L12 21l8-4.5"/>',
+    "program": '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+    "rendering": '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 16l-5-5L5 20"/>',
+    "plan-graphics": '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/>',
+    "presentation": '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+  };
+  function stdIconSvg(id) {
+    return (
+      '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      (STD_ICON[id] || "") +
+      "</svg>"
+    );
+  }
 
   // ---- Sign-in gate ----
   const gate = document.getElementById("gate");
@@ -235,6 +253,7 @@
         const nav = c.getAttribute("data-nav");
         if (nav === "root") { state.openPhase = null; state.openSub = null; }
         else if (nav === "phase") { state.openSub = null; }
+        else if (nav === "standards-root") { state.openStandard = null; }
         render();
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
@@ -310,7 +329,9 @@
     // #5 — lead with the primary "do this now" resource.
     const startHere = primary
       ? '<a class="op-start" href="' + primary.driveUrl + '" target="_blank" rel="noopener">' +
-        '<span class="op-start-label">Start here</span>' +
+        '<span class="op-start-label">Start here' +
+        (primary.type === "Template" ? '<span class="op-start-badge">Current template</span>' : "") +
+        "</span>" +
         '<span class="op-start-title">' + primary.title + "</span>" +
         '<span class="op-start-meta">' + primary.type + " · Open in Drive ↗</span>" +
         "</a>"
@@ -481,6 +502,121 @@
       "</section>";
   }
 
+  // ---- View: Studio Standards (top-level) ----
+  function renderStandards() {
+    const cards = STANDARDS.map(function (s) {
+      return (
+        '<button class="std-card" type="button" data-std="' + s.id + '">' +
+        '<span class="std-card-icon">' + stdIconSvg(s.id) + "</span>" +
+        '<span class="std-card-text">' +
+        '<span class="std-card-name">' + s.name + "</span>" +
+        '<span class="std-card-summary">' + s.summary + "</span>" +
+        "</span>" +
+        '<span class="std-card-cta">View standard →</span>' +
+        "</button>"
+      );
+    }).join("");
+
+    document.getElementById("content").innerHTML =
+      '<section class="standards">' +
+      '<div class="browse-head"><span class="browse-kicker">Studio Standards ' + phTag() + "</span>" +
+      '<span class="browse-hint">The latest templates and the style we use for each deliverable — so you never hunt for the current file or guess our style.</span></div>' +
+      '<div class="std-grid">' + cards + "</div>" +
+      "</section>";
+
+    document.querySelectorAll(".std-card").forEach(function (c) {
+      c.addEventListener("click", function () {
+        state.openStandard = c.getAttribute("data-std");
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+  }
+
+  // ---- View: a single standard ----
+  function renderStandardDetail(stdId) {
+    const std = STANDARDS.find(function (s) { return s.id === stdId; });
+    if (!std) { state.openStandard = null; return renderStandards(); }
+
+    const t = std.template;
+    const teal = "var(--accent)";
+
+    const specsAside = (std.specs && std.specs.length)
+      ? '<aside class="op-stats-col"><h3 class="op-stats-title">Specs</h3><dl class="op-stats">' +
+        std.specs.map(function (s) { return '<div class="op-stat"><dt>' + s.label + "</dt><dd>" + s.value + "</dd></div>"; }).join("") +
+        "</dl></aside>"
+      : "";
+
+    const templateCard =
+      '<a class="current-template" href="' + t.driveUrl + '" target="_blank" rel="noopener">' +
+      '<span class="ct-badge">Current template</span>' +
+      '<span class="ct-title">' + t.title + "</span>" +
+      '<span class="ct-meta">' + t.version + " · updated " + t.updated + " · owner: " + t.owner + " · Open in Drive ↗</span>" +
+      "</a>";
+
+    const rules = (std.rules || []).map(function (r) { return "<li>" + r + "</li>"; }).join("");
+
+    const exampleRows = (std.examples || []).map(function (e) {
+      return (
+        '<a class="example-row" href="' + e.driveUrl + '" target="_blank" rel="noopener">' +
+        '<span class="example-tag">Example</span>' +
+        '<span class="example-kind">' + e.kind + "</span>" +
+        '<span class="example-title">' + e.title + "</span>" +
+        '<span class="example-open">Open in Drive ↗</span>' +
+        "</a>"
+      );
+    }).join("");
+
+    const usedIn = (std.usedIn || [])
+      .map(function (pid) {
+        const p = PHASES.find(function (x) { return x.id === pid; });
+        if (!p) return "";
+        return '<button class="usedin-chip" type="button" data-phase="' + pid + '" style="--phase:' + phaseColor(pid) + '">' + p.name + "</button>";
+      })
+      .join("");
+
+    document.getElementById("content").innerHTML =
+      breadcrumbHtml([{ label: "Standards", nav: "standards-root" }, { label: std.name }]) +
+      '<article class="onepager" style="--phase:' + teal + '">' +
+      '<header class="op-hero">' +
+      '<span class="op-hero-icon">' + stdIconSvg(std.id) + "</span>" +
+      '<div class="op-hero-text">' +
+      '<span class="op-kicker">Studio standard</span>' +
+      "<h2>" + std.name + "</h2>" +
+      '<p class="op-summary">' + std.summary + "</p>" +
+      "</div>" +
+      "</header>" +
+      '<div class="op-body">' +
+      specsAside +
+      '<div class="op-main">' +
+      '<section class="op-section"><h3>Current template</h3>' +
+      '<p class="op-section-note">The single source of truth — always start from this file. ' + phTag() + "</p>" +
+      templateCard +
+      "</section>" +
+      '<section class="op-section"><h3>Style &amp; standards</h3><ul class="std-rules">' + rules + "</ul></section>" +
+      '<section class="op-section"><h3>Style exemplar</h3>' +
+      '<div class="std-exemplar">[Placeholder] Example image of our ' + std.name.toLowerCase() + " style.</div></section>" +
+      '<section class="op-section"><h3>Case studies &amp; examples</h3>' +
+      (exampleRows || '<p class="op-empty">[Placeholder] Examples will be added here.</p>') +
+      "</section>" +
+      (usedIn ? '<section class="op-section"><h3>Used in</h3><div class="usedin-row">' + usedIn + "</div></section>" : "") +
+      "</div>" +
+      "</div>" +
+      "</article>";
+
+    wireCrumbs();
+    document.querySelectorAll(".usedin-chip").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        state.section = "process";
+        state.openStandard = null;
+        state.openPhase = chip.getAttribute("data-phase");
+        state.openSub = null;
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+  }
+
   // ---- View: Design Studio Calendar (top-level) ----
   function renderCalendar() {
     const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -568,12 +704,14 @@
     const filterbar = document.getElementById("filterbar");
     const browseHead = document.getElementById("browse-head");
 
-    // Values & Culture and the Calendar are standalone top-level sections.
-    if (state.section === "values" || state.section === "calendar") {
+    // Values, Standards, and the Calendar are standalone top-level sections.
+    if (state.section === "values" || state.section === "calendar" || state.section === "standards") {
       filterbar.hidden = true;
       if (browseHead) browseHead.hidden = true;
       if (state.section === "values") renderValues();
-      else renderCalendar();
+      else if (state.section === "calendar") renderCalendar();
+      else if (state.openStandard) renderStandardDetail(state.openStandard);
+      else renderStandards();
       document.getElementById("result-count").textContent = "";
       document.getElementById("clear-filter").hidden = true;
       return;
@@ -654,6 +792,7 @@
       // Returning to a top-level section lands on its index, not a deep view.
       state.openPhase = null;
       state.openSub = null;
+      state.openStandard = null;
       state.calOffset = 0;
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
