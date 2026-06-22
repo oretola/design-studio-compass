@@ -192,6 +192,75 @@ const PHASES = [
             "Synthesize findings into a shared predesign brief.",
           ],
         },
+        // Early site analysis + programming, organized by three lenses.
+        // Each topic carries three layers: what (collect), how (methods), why (critical thinking).
+        // Why copy is placeholder and needs senior-leadership voice.
+        lenses: [
+          {
+            id: "land",
+            name: "Informed by the Land",
+            summary: "The physical and sensory reality of the site.",
+            topics: [
+              {
+                id: "site-unbuilt",
+                name: "Site Analysis (Unbuilt)",
+                what: ["Rain Patterns", "Wind & Air Patterns", "Wildlife Patterns", "Sun Paths", "Solar Analysis", "Seasonal Weather Patterns", "Climate", "Ecology", "Hydrology / Water"],
+                how: ["Environmental Maps / Diagrams", "Site / Environmental Diagrams", "Solar / Wind Studies", "Photographs"],
+                why: "[Placeholder — senior voice] Reading the land's natural systems first lets us design with climate and ecology rather than against them — and signals to the community that we respect the place before proposing to change it.",
+              },
+              {
+                id: "sensory",
+                name: "Sensory Analysis",
+                what: ["Views From the Site", "Views to the Site", "Sounds", "Materiality / Textures", "Smells"],
+                how: ["Sensory Maps", "Photographs"],
+                why: "[Placeholder — senior voice] The felt experience of a site — what you see, hear, and smell — shapes whether a space reads as safe, dignified, and welcoming to the people who will use it.",
+              },
+              {
+                id: "site-built",
+                name: "Site Analysis (Built)",
+                what: ["Vehicle Patterns", "Physical Neighborhood Context", "Zoning & Site Parameters", "Public Transit Patterns", "Pedestrian Patterns", "Utilities", "Land Use Patterns", "Existing Building / Site History"],
+                how: ["Physical Site Model", "Digital Site Model", "Photographs", "Site Surveys", "Environmental Analysis / Reports", "Site Diagrams", "Zoning Diagrams", "As-Builts", "Historical Maps & Photos", "2D Diagrams", "3D Diagrams"],
+                why: "[Placeholder — senior voice] Understanding the existing neighborhood fabric helps us avoid displacement, connect to what already works, and design infrastructure the community can actually use.",
+              },
+            ],
+          },
+          {
+            id: "humans",
+            name: "Informed by the Humans",
+            summary: "The people who will use, inhabit, or be affected by the project.",
+            topics: [
+              {
+                id: "program",
+                name: "Program",
+                what: ["Adjacencies", "Qualitative Needs", "Sensory Needs", "Trauma-Informed Needs", "Social / Privacy Needs", "Quantitative Needs"],
+                how: ["2D Diagrams", "3D Diagrams", "Spreadsheets"],
+                why: "[Placeholder — senior voice] Programming around qualitative, sensory, and trauma-informed needs — not just square footage — is how we design spaces that heal rather than control.",
+              },
+              {
+                id: "community",
+                name: "Community + People",
+                what: ["Cultural Context", "History", "Rituals", "Art", "Neighborhood", "City", "Street", "Community Resources", "Community", "Client", "Staff", "Service / Program Participants"],
+                how: ["Immersive Site Visits", "Deep Listening Sessions", "Generative Design Engagements", "Participatory Design Sessions", "Independent Research", "Attending Local / Community / Neighborhood Events"],
+                why: "[Placeholder — senior voice] Centering the people most impacted — their history, rituals, and knowledge — ensures the design builds community power rather than imposing outside assumptions.",
+              },
+            ],
+          },
+          {
+            id: "finances",
+            name: "Informed by the Finances",
+            summary: "The economic and funding context that shapes what's possible.",
+            topics: [
+              {
+                id: "finances-core",
+                name: "Finances",
+                what: ["Market Study", "Cost Estimates", "Client Budgets", "Fundraising Needs / Goals", "Funding Sources", "Income-Generating Uses"],
+                how: [],
+                howNote: "[Placeholder] Methods for the Finances lens were not developed in the session — this layer needs another working session.",
+                why: "[Placeholder — senior voice] Naming the funding reality early protects the vision: it lets us design what can actually be built, owned, and sustained by the community over time.",
+              },
+            ],
+          },
+        ],
         resources: [
           { title: "Project Kickoff Template", type: "Template", needs: ["start-project"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-kickoff" },
           { title: "Site Analysis Checklist", type: "Checklist", needs: ["start-project"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-site-analysis" },

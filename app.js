@@ -62,9 +62,25 @@
     needFilter: null,   // need id when filtering via a question chip
     openPhase: null,    // phase id when a tile is opened
     openSub: null,      // subphase id when a one-pager is opened
+    openLens: null,     // lens id within a lens-structured subphase (e.g. Predesign)
     openStandard: null, // standard id when a standard page is opened
     calOffset: 0,       // months from the current month, for the calendar view
   };
+
+  // Icons for the three Concept lenses.
+  const LENS_ICON = {
+    "land": '<path d="M3 18l5-8 4 5 3-4 6 7"/><path d="M3 21h18"/>',
+    "humans": '<circle cx="9" cy="8" r="3"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16 6.2a3 3 0 0 1 0 5.6"/><path d="M19.5 20a5.5 5.5 0 0 0-3.4-5.1"/>',
+    "finances": '<circle cx="12" cy="12" r="9"/><path d="M12 7v10"/><path d="M14.5 9.3c-.5-.8-1.4-1.3-2.5-1.3-1.4 0-2.3.8-2.3 1.9 0 1 .8 1.6 2.3 1.9s2.6.9 2.6 2-1 2-2.4 2c-1.2 0-2.1-.5-2.6-1.4"/>',
+  };
+  function lensIconSvg(id) {
+    return (
+      '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      (LENS_ICON[id] || "") +
+      "</svg>"
+    );
+  }
 
   // Icons for Studio Standards (deliverable types).
   const STD_ICON = {
@@ -254,8 +270,9 @@
     document.querySelectorAll(".crumb[data-nav]").forEach(function (c) {
       c.addEventListener("click", function () {
         const nav = c.getAttribute("data-nav");
-        if (nav === "root") { state.openPhase = null; state.openSub = null; }
-        else if (nav === "phase") { state.openSub = null; }
+        if (nav === "root") { state.openPhase = null; state.openSub = null; state.openLens = null; }
+        else if (nav === "phase") { state.openSub = null; state.openLens = null; }
+        else if (nav === "subphase") { state.openLens = null; }
         else if (nav === "standards-root") { state.openStandard = null; }
         render();
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -307,10 +324,107 @@
     document.querySelectorAll(".subcard").forEach(function (card) {
       card.addEventListener("click", function () {
         state.openSub = card.getAttribute("data-sub");
+        state.openLens = null;
         render();
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
     });
+  }
+
+  // ---- View: lens index for a lens-structured subphase (e.g. Predesign) ----
+  function renderLensIndex(phase, sub) {
+    const color = phaseColor(phase.id);
+    const overview = (sub.onePager && sub.onePager.overview) || sub.summary || "";
+    const cards = sub.lenses.map(function (lens) {
+      const n = lens.topics.length;
+      return (
+        '<button class="lens-card" type="button" data-lens="' + lens.id + '" style="--phase:' + color + '">' +
+        '<span class="lens-card-icon">' + lensIconSvg(lens.id) + "</span>" +
+        '<span class="lens-card-text">' +
+        '<span class="lens-card-name">' + lens.name + "</span>" +
+        '<span class="lens-card-summary">' + (lens.summary || "") + "</span>" +
+        "</span>" +
+        '<span class="lens-card-cta">' + n + " topic" + (n === 1 ? "" : "s") + " →</span>" +
+        "</button>"
+      );
+    }).join("");
+
+    document.getElementById("content").innerHTML =
+      breadcrumbHtml([
+        { label: "Process & Resources", nav: "root" },
+        { label: phase.name, nav: "phase" },
+        { label: sub.name },
+      ]) +
+      '<article class="onepager" style="--phase:' + color + '">' +
+      '<header class="op-hero">' +
+      '<span class="op-hero-icon">' + iconSvg(phase.id) + "</span>" +
+      '<div class="op-hero-text">' +
+      '<span class="op-kicker">' + phase.name + " · early concept work</span>" +
+      "<h2>" + sub.name + "</h2>" +
+      '<p class="op-summary">' + (sub.summary || "") + "</p>" +
+      "</div>" +
+      "</header>" +
+      '<div class="op-body"><div class="op-main">' +
+      '<section class="op-section"><h3>Overview</h3><p>' + overview + "</p></section>" +
+      '<section class="op-section"><h3>What informs this work</h3>' +
+      '<p class="op-section-note">Three lenses — open one to see what we look for, how we document it, and why it matters. ' + phTag() + "</p>" +
+      '<div class="lens-grid">' + cards + "</div></section>" +
+      "</div></div>" +
+      "</article>";
+
+    wireCrumbs();
+    document.querySelectorAll(".lens-card").forEach(function (c) {
+      c.addEventListener("click", function () {
+        state.openLens = c.getAttribute("data-lens");
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+  }
+
+  // ---- View: a single lens (topics × What / How / Why) ----
+  function renderLensDetail(phase, sub, lensId) {
+    const lens = sub.lenses.find(function (l) { return l.id === lensId; });
+    if (!lens) { state.openLens = null; return renderLensIndex(phase, sub); }
+    const color = phaseColor(phase.id);
+
+    const topics = lens.topics.map(function (t) {
+      const whatList = '<ul class="lens-list">' + t.what.map(function (w) { return "<li>" + w + "</li>"; }).join("") + "</ul>";
+      const howBlock = (t.how && t.how.length)
+        ? '<ul class="lens-list">' + t.how.map(function (h) { return "<li>" + h + "</li>"; }).join("") + "</ul>"
+        : '<p class="op-empty">' + (t.howNote || "[Placeholder] Methods still to be developed.") + "</p>";
+      return (
+        '<div class="topic">' +
+        '<h3 class="topic-name">' + t.name + "</h3>" +
+        '<div class="topic-layers">' +
+        '<div class="topic-layer"><span class="layer-label">What we look &amp; listen for</span>' + whatList + "</div>" +
+        '<div class="topic-layer"><span class="layer-label">How we collect &amp; document</span>' + howBlock + "</div>" +
+        "</div>" +
+        '<div class="topic-why"><span class="why-label">Why it matters</span><p>' + t.why + "</p></div>" +
+        "</div>"
+      );
+    }).join("");
+
+    document.getElementById("content").innerHTML =
+      breadcrumbHtml([
+        { label: "Process & Resources", nav: "root" },
+        { label: phase.name, nav: "phase" },
+        { label: sub.name, nav: "subphase" },
+        { label: lens.name },
+      ]) +
+      '<article class="onepager" style="--phase:' + color + '">' +
+      '<header class="op-hero">' +
+      '<span class="op-hero-icon">' + lensIconSvg(lens.id) + "</span>" +
+      '<div class="op-hero-text">' +
+      '<span class="op-kicker">' + sub.name + "</span>" +
+      "<h2>" + lens.name + "</h2>" +
+      '<p class="op-summary">' + (lens.summary || "") + "</p>" +
+      "</div>" +
+      "</header>" +
+      '<div class="lens-detail-body">' + topics + "</div>" +
+      "</article>";
+
+    wireCrumbs();
   }
 
   // ---- View: a subphase one-pager ----
@@ -318,6 +432,12 @@
     const phase = PHASES.find(function (p) { return p.id === phaseId; });
     const sub = phase && phase.subphases.find(function (s) { return s.id === subId; });
     if (!sub) { state.openSub = null; return renderPhaseDetail(phaseId); }
+
+    // Lens-structured subphases (e.g. Predesign) use the lens views.
+    if (sub.lenses) {
+      if (state.openLens) return renderLensDetail(phase, sub, state.openLens);
+      return renderLensIndex(phase, sub);
+    }
 
     const op = sub.onePager || {};
     const stepIdx = phase.subphases.indexOf(sub) + 1;
@@ -766,6 +886,7 @@
     state.needFilter = null;
     state.openPhase = null;
     state.openSub = null;
+    state.openLens = null;
     document.getElementById("search").value = "";
     render();
   }
@@ -783,6 +904,7 @@
       // view or a stale filter.
       state.openPhase = null;
       state.openSub = null;
+      state.openLens = null;
       state.openStandard = null;
       state.calOffset = 0;
       state.view = "phase";
@@ -797,6 +919,7 @@
       state.view = btn.getAttribute("data-view");
       state.openPhase = null;
       state.openSub = null;
+      state.openLens = null;
       state.needFilter = null;
       render();
     });
