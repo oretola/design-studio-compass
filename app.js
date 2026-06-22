@@ -57,8 +57,9 @@
   // ---- App state ----
   const state = {
     section: "process", // "values" | "process"
-    view: "phase",      // "phase" | "type" | "question"
+    view: "phase",      // "phase" | "question"
     search: "",
+    typeFilter: null,   // resource type when filtering by type (null = all)
     needFilter: null,   // need id when filtering via a question chip
     openPhase: null,    // phase id when a tile is opened
     openSub: null,      // subphase id when a one-pager is opened
@@ -167,6 +168,7 @@
   }
 
   function matchesSearchNeed(r) {
+    if (state.typeFilter && r.type !== state.typeFilter) return false;
     if (state.needFilter && !(r.needs || []).includes(state.needFilter)) return false;
     if (state.search) {
       const q = state.search.toLowerCase();
@@ -835,11 +837,13 @@
     });
     const filterbar = document.getElementById("filterbar");
     const browseHead = document.getElementById("browse-head");
+    const typebar = document.getElementById("typebar");
 
     // Values, Standards, and the Calendar are standalone top-level sections.
     if (state.section === "values" || state.section === "calendar" || state.section === "standards") {
       filterbar.hidden = true;
       if (browseHead) browseHead.hidden = true;
+      if (typebar) typebar.hidden = true;
       if (state.section === "values") renderValues();
       else if (state.section === "calendar") renderCalendar();
       else if (state.openStandard) renderStandardDetail(state.openStandard);
@@ -850,20 +854,23 @@
     }
     filterbar.hidden = false;
     if (browseHead) browseHead.hidden = false;
+    if (typebar) typebar.hidden = false;
 
     // Filter bar active state.
     document.querySelectorAll(".filter-btn").forEach(function (btn) {
       btn.classList.toggle("is-active", btn.getAttribute("data-view") === state.view);
     });
+    renderTypeChips();
 
     if (state.search) {
       renderSearchResults();
+    } else if (state.typeFilter) {
+      // Type is a filter: show a flat list of that type (across phases).
+      renderGrouped("type", [state.typeFilter], typeLabel);
     } else if (state.view === "phase") {
       if (state.openPhase && state.openSub) renderOnePager(state.openPhase, state.openSub);
       else if (state.openPhase) renderPhaseDetail(state.openPhase);
       else renderTiles();
-    } else if (state.view === "type") {
-      renderGrouped("type", TYPES, function (t) { return t === "Case Study" ? "Case studies &amp; examples" : t + "s"; });
     } else if (state.view === "question") {
       renderGrouped("need", NEEDS.map(function (n) { return n.id; }), function (id) {
         const n = NEEDS.find(function (x) { return x.id === id; });
@@ -873,6 +880,31 @@
 
     updateMeta();
     wireEmptyReset();
+  }
+
+  function typeLabel(t) { return t === "Case Study" ? "Case studies &amp; examples" : t + "s"; }
+
+  // Type filter chips ("All" + each type).
+  function renderTypeChips() {
+    const row = document.getElementById("type-chips");
+    if (!row) return;
+    const chips = [{ id: null, label: "All" }].concat(
+      TYPES.map(function (t) { return { id: t, label: t === "Case Study" ? "Case studies" : t + "s" }; })
+    );
+    row.innerHTML = chips.map(function (c) {
+      const active = (state.typeFilter || null) === c.id ? " is-active" : "";
+      return '<button class="type-chip' + active + '" type="button" data-type="' + (c.id === null ? "" : c.id) + '">' + c.label + "</button>";
+    }).join("");
+    row.querySelectorAll(".type-chip").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        const t = chip.getAttribute("data-type");
+        state.typeFilter = t || null;
+        state.openPhase = null;
+        state.openSub = null;
+        state.openLens = null;
+        render();
+      });
+    });
   }
 
   function updateMeta() {
@@ -893,6 +925,7 @@
       const n = NEEDS.find(function (x) { return x.id === state.needFilter; });
       labels.push(n ? n.label : state.needFilter);
     }
+    if (state.typeFilter) labels.push(state.typeFilter === "Case Study" ? "Case studies" : state.typeFilter + "s");
     if (state.search) labels.push('"' + state.search + '"');
 
     if (labels.length) {
@@ -906,6 +939,7 @@
   function clearAll() {
     state.search = "";
     state.needFilter = null;
+    state.typeFilter = null;
     state.openPhase = null;
     state.openSub = null;
     state.openLens = null;
@@ -943,6 +977,7 @@
       state.openSub = null;
       state.openLens = null;
       state.needFilter = null;
+      state.typeFilter = null;
       render();
     });
   });

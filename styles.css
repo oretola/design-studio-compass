@@ -236,6 +236,28 @@ body {
 }
 .clear-filter:hover { background: color-mix(in srgb, var(--accent) 26%, transparent); }
 
+/* Type filter (demoted from a tab to a facet) */
+.typebar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 20px; }
+.typebar-label {
+  font-family: "Raleway", sans-serif;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.type-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.type-chip {
+  background: var(--card);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.type-chip:hover { border-color: var(--accent); color: var(--accent); }
+.type-chip.is-active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
 /* ============ "Ways to filter" sub-header ============ */
 .browse-head { margin-bottom: 10px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
 .browse-kicker {

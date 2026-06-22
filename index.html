@@ -94,7 +94,6 @@
     <nav class="filterbar" id="filterbar" aria-label="Browse resources by">
       <div class="filter-group" role="group" aria-label="View">
         <button class="filter-btn is-active" data-view="phase">By phase</button>
-        <button class="filter-btn" data-view="type">By type</button>
         <button class="filter-btn" data-view="question">By question</button>
       </div>
       <div class="results-meta">
@@ -102,6 +101,12 @@
         <button id="clear-filter" class="clear-filter" type="button" hidden></button>
       </div>
     </nav>
+
+    <!-- Type is a filter, not a primary mode -->
+    <div class="typebar" id="typebar">
+      <span class="typebar-label">Filter by type</span>
+      <div class="type-chips" id="type-chips"></div>
+    </div>
 
     <main id="content" class="content"></main>
 
