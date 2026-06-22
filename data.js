@@ -18,20 +18,23 @@ const NEEDS = [
 ];
 
 // ---- Top level: Values & Culture (high-level beliefs) ----
-// Placeholder content — replace with the studio's real mission and values.
+// Mission + values are the studio's real copy. Value descriptions still pending.
 const VALUES_INTRO = {
-  kicker: "What we believe",
-  statement: "Design is never neutral. We use it to shift power toward the communities most harmed by injustice.",
-  body: "These beliefs shape every project we take on and how we work together as a studio. Start here to understand the why before diving into the how. [Placeholder copy.]",
+  kicker: "Our mission",
+  statement: "We believe space shapes society.",
+  body: [
+    "Architecture and real estate have long been used to exclude and control — through stolen land, redlining, dispossession, and hostile design, most visibly in the prisons and jails built to warehouse people instead of repair harm. The result is a built world that encodes inequity in our daily lives. DJDS is changing who holds this power of world-building.",
+    "We work alongside community-based organizations to dream, design, build, and own spaces that affirm life rather than diminish it. From restorative justice hubs to supportive housing, we create physical infrastructure that anchors and fortifies movements — making abolition a lived reality, one project at a time.",
+  ],
 };
 
+// Value names are real; descriptions are placeholder pending studio copy.
 const VALUES = [
-  { title: "Center those most impacted", body: "The people closest to the problem are closest to the solution. We design with their leadership, not our assumptions." },
-  { title: "Design with, not for", body: "Community members are co-designers and decision-makers throughout the process — not an audience we present to." },
-  { title: "Repair over punishment", body: "We create spaces that heal and restore relationships rather than control and confine." },
-  { title: "Beauty is dignity", body: "Communities that have been disinvested deserve spaces that are not just functional, but beautiful." },
-  { title: "Build lasting power", body: "Our work leaves communities with ownership, skills, and infrastructure that outlast the project." },
-  { title: "Tell the truth", body: "We name the history and the harm a site carries, and design honestly in response." },
+  { title: "Abundance", body: "[Placeholder] Description to come from the studio." },
+  { title: "Relationships", body: "[Placeholder] Description to come from the studio." },
+  { title: "Interconnectedness", body: "[Placeholder] Description to come from the studio." },
+  { title: "Transformation", body: "[Placeholder] Description to come from the studio." },
+  { title: "Solutionary", body: "[Placeholder] Description to come from the studio." },
 ];
 
 const CULTURE = [

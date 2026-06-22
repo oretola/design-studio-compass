@@ -736,17 +736,20 @@
       );
     }).join("");
 
+    const intro = (Array.isArray(VALUES_INTRO.body) ? VALUES_INTRO.body : [VALUES_INTRO.body])
+      .map(function (p) { return '<p class="values-lead">' + p + "</p>"; }).join("");
+
     document.getElementById("content").innerHTML =
       '<section class="values">' +
       '<div class="values-intro">' +
-      '<span class="values-kicker">' + VALUES_INTRO.kicker + " " + phTag() + "</span>" +
+      '<span class="values-kicker">' + VALUES_INTRO.kicker + "</span>" +
       '<h2 class="values-statement">' + VALUES_INTRO.statement + "</h2>" +
-      '<p class="values-lead">' + VALUES_INTRO.body + "</p>" +
+      intro +
       "</div>" +
       imageSlot("Studio hero image", "img-slot-hero") +
-      '<h3 class="values-section-head">Our values ' + phTag() + "</h3>" +
+      '<h3 class="values-section-head">Our values</h3>' +
       '<div class="value-grid">' + valueCards + "</div>" +
-      '<h3 class="values-section-head">Design Studio Ethos ' + phTag() + "</h3>" +
+      '<h3 class="values-section-head">Design Studio Ethos</h3>' +
       '<p class="values-note">Hover (or focus) a square to read more.</p>' +
       '<div class="ethos-grid">' + ethosSquares + "</div>" +
       '<h3 class="values-section-head">Our culture ' + phTag() + "</h3>" +
