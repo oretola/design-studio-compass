@@ -192,6 +192,16 @@
   // Small inline marker so generated/sample text is never mistaken for real content.
   function phTag() { return '<span class="ph-tag">Placeholder</span>'; }
 
+  // Image placeholder slot — ready for real project photography.
+  function imageSlot(label, cls) {
+    return (
+      '<div class="img-slot ' + (cls || "") + '">' +
+      '<svg class="img-slot-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 16l-5-5L5 20"/></svg>' +
+      '<span class="img-slot-label">' + label + " " + phTag() + "</span>" +
+      "</div>"
+    );
+  }
+
   // "Why this matters" — the teaching layer, surfaced across the app.
   function whyCallout(label, text) {
     if (!text) return "";
@@ -389,6 +399,7 @@
       "</div>" +
       '<span class="detail-count">' + plural(count) + "</span>" +
       "</header>" +
+      imageSlot(phase.name + " banner", "img-slot-banner") +
       whyCallout("Why this phase matters", PHASE_WHY[phase.id]) +
       (SAMPLE_PHASES.indexOf(phase.id) !== -1
         ? '<p class="sample-note">This phase is an illustrative sample — its sections and resources are placeholders. ' + phTag() + "</p>"
@@ -692,6 +703,7 @@
       '<h2 class="values-statement">' + VALUES_INTRO.statement + "</h2>" +
       '<p class="values-lead">' + VALUES_INTRO.body + "</p>" +
       "</div>" +
+      imageSlot("Studio hero image", "img-slot-hero") +
       '<h3 class="values-section-head">Our values ' + phTag() + "</h3>" +
       '<div class="value-grid">' + valueCards + "</div>" +
       '<h3 class="values-section-head">Design Studio Ethos ' + phTag() + "</h3>" +
