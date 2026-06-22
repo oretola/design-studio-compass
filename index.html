@@ -8,7 +8,7 @@
   <!-- Font: Raleway — the DJDS brand typeface -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css" />
 
@@ -39,6 +39,14 @@
     </form>
   </div>
 
+  <!-- Hand-drawn / organic filter defs (referenced by CSS filter: url(...)) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4"/></filter>
+      <filter id="rough-soft"><feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/></filter>
+    </defs>
+  </svg>
+
   <!-- Dashboard -->
   <div id="app" class="app" hidden>
     <div class="proto-banner" role="note">
@@ -63,14 +71,14 @@
     <!-- Top-level sections -->
     <nav class="topnav" aria-label="Main sections">
       <button class="topnav-btn" data-section="values" type="button">Values &amp; Culture</button>
-      <button class="topnav-btn is-active" data-section="process" type="button">Process &amp; Resources</button>
+      <button class="topnav-btn is-active" data-section="process" type="button">How We Work</button>
       <button class="topnav-btn" data-section="standards" type="button">Standards</button>
       <button class="topnav-btn" data-section="calendar" type="button">Design Studio Calendar</button>
     </nav>
 
     <!-- Ask / search hero — the primary path (Process & Resources) -->
     <section class="ask-hero" id="ask-hero" aria-label="Ask or search">
-      <h2 class="ask-title">What do you need?</h2>
+      <h2 class="ask-title" id="ask-title">What do you need?</h2>
       <form class="ask-bar" id="ask-form" role="search">
         <span class="ask-icon" aria-hidden="true">⌕</span>
         <input type="search" id="ask-input" class="ask-input" placeholder="Ask a question or search resources…   /" aria-label="Ask or search resources" autocomplete="off" />

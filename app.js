@@ -259,29 +259,27 @@
       '<section class="home-block"><h2 class="home-h">Recently updated ' + phTag() + "</h2>" +
       '<ul class="recent-list">' + recent + "</ul></section>";
 
-    // Featured (built) phase — visually heavier because it has the most content.
-    const concept = PHASES.find(function (p) { return p.id === "concept"; });
-    const featured =
-      '<button class="phase-featured" type="button" data-phase="' + concept.id + '" style="--phase:' + phaseColor(concept.id) + '">' +
-      '<span class="pf-icon">' + iconSvg(concept.id) + "</span>" +
-      '<span class="pf-text">' +
-      '<span class="pf-tag">Built out</span>' +
-      '<span class="pf-name">' + concept.name + "</span>" +
-      '<span class="pf-blurb">' + concept.blurb + "</span>" +
-      "</span>" +
-      '<span class="pf-cta">' + plural(phaseTotal(concept)) + " · Open →</span>" +
-      "</button>";
-
-    // Stub phases — lighter weight, honestly marked as in progress.
-    const stubs = PHASES.filter(function (p) { return p.id !== "concept"; }).map(function (phase) {
+    // Phases as hand-drawn circles with icons — a clean two rows of four.
+    const circles = PHASES.map(function (p) {
+      const featured = p.id === "concept";
       return (
-        '<button class="phase-stub" type="button" data-phase="' + phase.id + '" style="--phase:' + phaseColor(phase.id) + '">' +
-        '<span class="ps-icon">' + iconSvg(phase.id) + "</span>" +
-        '<span class="ps-name">' + phase.name + "</span>" +
-        '<span class="ps-tag">In progress</span>' +
+        '<button class="phase-circle' + (featured ? " is-built" : "") + '" type="button" data-phase="' + p.id + '" ' +
+        'style="--phase:' + phaseColor(p.id) + '" aria-label="' + p.name + (featured ? "" : " — in progress") + '">' +
+        '<span class="pc-ring"><span class="pc-ic">' + iconSvg(p.id) + "</span></span>" +
+        '<span class="pc-name">' + p.name + "</span>" +
+        (featured
+          ? '<span class="pc-tag">Built out · ' + plural(phaseTotal(p)) + "</span>"
+          : '<span class="pc-tag pc-tag-stub">In progress</span>') +
         "</button>"
       );
     }).join("");
+
+    const arcSection =
+      '<section class="home-block">' +
+      '<h2 class="home-h">How a project moves</h2>' +
+      '<p class="arc-note">Eight phases, concept to close-out — though the work loops and overlaps, it’s rarely a straight line. Only <strong>Concept Development</strong> is built out yet. ' + phTag() + "</p>" +
+      '<div class="phase-circles">' + circles + "</div>" +
+      "</section>";
 
     const studioWide =
       '<button class="studio-wide-card" type="button" data-phase="__studio">' +
@@ -289,15 +287,9 @@
       '<span class="sw-text"><span class="sw-name">Studio-wide resources</span>' +
       '<span class="sw-sub">Guidelines &amp; standards that apply across every phase</span></span>' +
       '<span class="sw-cta">' + plural(STUDIO_WIDE.length) + " →</span></button>";
+    const studioBlock = '<section class="home-block">' + studioWide + "</section>";
 
-    const phaseSection =
-      '<section class="home-block"><h2 class="home-h">Jump into the work — by phase</h2>' +
-      featured +
-      '<div class="stub-grid">' + stubs + "</div>" +
-      studioWide +
-      "</section>";
-
-    document.getElementById("content").innerHTML = recentSection + phaseSection;
+    document.getElementById("content").innerHTML = arcSection + recentSection + studioBlock;
 
     document.querySelectorAll("#content [data-phase]").forEach(function (b) {
       b.addEventListener("click", function () {
@@ -356,7 +348,7 @@
       return Object.assign({}, r, { phaseId: "studio-wide", phaseName: "Studio-wide" });
     });
     document.getElementById("content").innerHTML =
-      breadcrumbHtml([{ label: "Process & Resources", nav: "root" }, { label: "Studio-wide" }]) +
+      breadcrumbHtml([{ label: "How We Work", nav: "root" }, { label: "Studio-wide" }]) +
       '<div class="phase-detail" style="--phase: var(--accent)">' +
       '<header class="detail-head">' +
       '<span class="detail-icon">' + studioWideIcon() + "</span>" +
@@ -400,7 +392,7 @@
       .join("");
 
     document.getElementById("content").innerHTML =
-      breadcrumbHtml([{ label: "Process & Resources", nav: "root" }, { label: phase.name }]) +
+      breadcrumbHtml([{ label: "How We Work", nav: "root" }, { label: phase.name }]) +
       '<div class="phase-detail" style="--phase:' + phaseColor(phase.id) + '">' +
       '<header class="detail-head">' +
       '<span class="detail-icon">' + iconSvg(phase.id) + "</span>" +
@@ -450,7 +442,7 @@
 
     document.getElementById("content").innerHTML =
       breadcrumbHtml([
-        { label: "Process & Resources", nav: "root" },
+        { label: "How We Work", nav: "root" },
         { label: phase.name, nav: "phase" },
         { label: sub.name },
       ]) +
@@ -506,7 +498,7 @@
 
     document.getElementById("content").innerHTML =
       breadcrumbHtml([
-        { label: "Process & Resources", nav: "root" },
+        { label: "How We Work", nav: "root" },
         { label: phase.name, nav: "phase" },
         { label: sub.name, nav: "subphase" },
         { label: lens.name },
@@ -604,7 +596,7 @@
 
     document.getElementById("content").innerHTML =
       breadcrumbHtml([
-        { label: "Process & Resources", nav: "root" },
+        { label: "How We Work", nav: "root" },
         { label: phase.name, nav: "phase" },
         { label: sub.name },
       ]) +
@@ -1099,6 +1091,17 @@
       banner.hidden = true;
       try { localStorage.setItem("dsc-banner-dismissed", "1"); } catch (e) {}
     });
+  })();
+
+  // ---- Ambience: time-aware greeting + daylight warmth ----
+  (function initAmbience() {
+    const h = new Date().getHours();
+    const greet = h < 12 ? "Good morning." : h < 17 ? "Good afternoon." : "Good evening.";
+    const title = document.getElementById("ask-title");
+    if (title) title.textContent = greet + " What are you working on?";
+    // Warmer at the start/end of day, cooler at midday (0 = cool, 1 = warm).
+    const warm = h < 8 ? 0.95 : h < 11 ? 0.5 : h < 16 ? 0.18 : h < 20 ? 0.7 : 1;
+    document.documentElement.style.setProperty("--daylight", String(warm));
   })();
 
 })();

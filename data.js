@@ -41,17 +41,18 @@ const CULTURE = [
   { title: "We protect the mission", body: "We choose projects and partners that advance justice — and we can say no." },
 ];
 
-// Design Studio Ethos — 8 placeholder hover squares on the Values page.
-// All titles and descriptions are placeholder text.
+// Design Studio Ethos — the studio's 9 real design principles.
+// Titles are the actual ethos; descriptions are placeholder pending studio copy.
 const ETHOS = [
-  { title: "Listen first", body: "[Placeholder] How we lead with listening — to be written by the studio." },
-  { title: "Share power", body: "[Placeholder] How we share decision-making — to be written by the studio." },
-  { title: "Design with joy", body: "[Placeholder] How joy shows up in our work — to be written by the studio." },
-  { title: "Sweat the details", body: "[Placeholder] How craft and care guide us — to be written by the studio." },
-  { title: "Leave it better", body: "[Placeholder] How we leave places and people better — to be written by the studio." },
-  { title: "Stay accountable", body: "[Placeholder] How we hold ourselves accountable — to be written by the studio." },
-  { title: "Build together", body: "[Placeholder] How we collaborate across roles — to be written by the studio." },
-  { title: "Keep learning", body: "[Placeholder] How we grow and adapt — to be written by the studio." },
+  { title: "Abundance & Beauty", body: "[Placeholder] Beauty is non-negotiable — even on a tight budget." },
+  { title: "Responding to Cultural Context", body: "[Placeholder] Design that listens to the culture and history of a place." },
+  { title: "Embrace Color, Materiality, & Texture", body: "[Placeholder] Rich color and real materials over flat, neutral minimalism." },
+  { title: "Design, Build, Craft", body: "[Placeholder] We design, build, and make — craft across the whole process." },
+  { title: "Embedded Arts & Culture", body: "[Placeholder] Art and artists are part of the work from the start." },
+  { title: "Express the Maker's Hand in the Design", body: "[Placeholder] Evidence of the human hand — made, not machine-generated." },
+  { title: "Work Across Scales", body: "[Placeholder] From the body to the building to the neighborhood and city." },
+  { title: "Biophilic / Biomimicry Design: Embedded Nature", body: "[Placeholder] Nature embedded throughout — light, air, growth, organic form." },
+  { title: "Respond to the Scale of the Body", body: "[Placeholder] Human-scaled and sensory — designed for how bodies feel space." },
 ];
 
 // ---- Design Studio Calendar — placeholder upcoming events ----

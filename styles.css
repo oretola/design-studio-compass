@@ -905,6 +905,72 @@ body {
   font-family: inherit; font-size: 0.85rem; font-weight: 600; color: var(--accent-deep); cursor: pointer;
 }
 .results-phase:hover { background: color-mix(in srgb, var(--accent) 20%, transparent); }
+
+/* ============ Material / daylight / organic (DJDS ethos) ============ */
+:root { --daylight: 0.5; }
+/* Daylight-aware warmth — warmer at the ends of the day, cooler midday */
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(1000px 640px at 88% -8%, rgba(217, 119, 60, calc(var(--daylight) * 0.20)) 0%, transparent 60%),
+    radial-gradient(760px 520px at -5% 105%, rgba(0, 156, 167, calc((1 - var(--daylight)) * 0.12)) 0%, transparent 60%);
+}
+/* Paper grain — subtle material tooth over everything */
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 2; opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+[data-theme="dark"] body::after { mix-blend-mode: screen; opacity: 0.035; }
+.app { position: relative; z-index: 1; }
+
+/* Organic warm blob behind the ask hero */
+.ask-hero { position: relative; }
+.ask-hero::before {
+  content: ""; position: absolute; z-index: -1;
+  left: 50%; top: 40%; width: 520px; height: 320px; transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 16%, transparent), transparent);
+  border-radius: 62% 38% 55% 45% / 55% 50% 50% 45%;
+  filter: blur(10px);
+  opacity: 0.8;
+}
+
+/* ============ Phases — hand-drawn circles, two rows of four ============ */
+.arc-note { margin: -4px 0 14px; color: var(--ink-soft); font-size: 0.9rem; max-width: 70ch; line-height: 1.5; }
+.phase-circles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px 14px; margin-top: 6px; }
+.phase-circle {
+  display: flex; flex-direction: column; align-items: center; gap: 11px;
+  padding: 12px 8px;
+  background: none; border: none; border-radius: 16px;
+  cursor: pointer; font-family: inherit; color: var(--ink);
+  transition: background 0.15s ease;
+}
+.phase-circle:hover { background: var(--card-2); }
+.phase-circle:focus-visible { outline: none; }
+.pc-ring {
+  width: 88px; height: 88px; display: grid; place-items: center;
+  color: var(--phase);
+  background: var(--card);
+  border: 2.5px solid var(--phase);
+  border-radius: 50%;
+  box-shadow: var(--shadow);
+  filter: url(#rough);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.phase-circle:hover .pc-ring { transform: translateY(-3px) scale(1.05); box-shadow: var(--shadow-lift); }
+.phase-circle:focus-visible .pc-ring { outline: 3px solid var(--phase); outline-offset: 3px; }
+.phase-circle.is-built .pc-ring { border-width: 3px; background: color-mix(in srgb, var(--phase) 10%, var(--card)); }
+.pc-ic { width: 36px; height: 36px; }
+.pc-name { font-size: 0.92rem; font-weight: 600; text-align: center; line-height: 1.25; max-width: 150px; }
+.pc-tag {
+  font-family: "Raleway", sans-serif; font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  color: #fff; background: var(--phase); border-radius: 999px; padding: 2px 9px;
+}
+.pc-tag-stub { color: var(--ink-soft); background: var(--chip-bg); }
+
+@media (max-width: 640px) {
+  .phase-circles { grid-template-columns: repeat(2, 1fr); gap: 18px 10px; }
+}
 .topnav-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
 
 /* ============ Values & Culture ============ */
