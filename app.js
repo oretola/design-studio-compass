@@ -185,6 +185,17 @@
   // Small inline marker so generated/sample text is never mistaken for real content.
   function phTag() { return '<span class="ph-tag">Placeholder</span>'; }
 
+  // "Why this matters" — the teaching layer, surfaced across the app.
+  function whyCallout(label, text) {
+    if (!text) return "";
+    return (
+      '<div class="why-callout">' +
+      '<span class="why-label">' + label + "</span>" +
+      "<p>" + text + "</p>" +
+      "</div>"
+    );
+  }
+
   // ---- Render: a single resource row (optionally tagged with its phase) ----
   function resourceRow(r, showPhase) {
     const phaseTag = showPhase
@@ -212,7 +223,9 @@
         '<span class="tile-icon">' + iconSvg(phase.id) + "</span>" +
         "</span>" +
         '<span class="tile-name">' + phase.name + "</span>" +
-        '<span class="tile-count">' + plural(count) + "</span>" +
+        '<span class="tile-count">' + plural(count) +
+        (SAMPLE_PHASES.indexOf(phase.id) !== -1 ? ' <span class="tile-sample">In progress</span>' : "") +
+        "</span>" +
         '<span class="tile-reveal" aria-hidden="true">' +
         '<span class="tile-blurb">' + phase.blurb + "</span>" +
         '<span class="tile-cta">View resources →</span>' +
@@ -230,8 +243,11 @@
       }).join("") +
       "</div></div>";
 
+    const note =
+      '<p class="index-note">New here? These phases show how a project moves — but the work loops and overlaps, it’s rarely strictly linear. Only <strong>Concept Development</strong> is built out so far; the rest are illustrative. ' + phTag() + "</p>";
+
     document.getElementById("content").innerHTML =
-      '<div class="tile-grid">' + tiles + "</div>" + chips;
+      note + '<div class="tile-grid">' + tiles + "</div>" + chips;
 
     document.querySelectorAll(".tile").forEach(function (t) {
       t.addEventListener("click", function () {
@@ -317,6 +333,10 @@
       "</div>" +
       '<span class="detail-count">' + plural(count) + "</span>" +
       "</header>" +
+      whyCallout("Why this phase matters", PHASE_WHY[phase.id]) +
+      (SAMPLE_PHASES.indexOf(phase.id) !== -1
+        ? '<p class="sample-note">This phase is an illustrative sample — its sections and resources are placeholders. ' + phTag() + "</p>"
+        : "") +
       '<div class="subcard-list">' + cards + "</div>" +
       "</div>";
 
@@ -521,6 +541,7 @@
       '<div class="op-body">' +
       statsAside +
       '<div class="op-main">' +
+      whyCallout("Why this matters", SECTION_WHY[sub.id]) +
       startHere +
       '<section class="op-section"><h3>Overview</h3><p>' + overview + "</p></section>" +
       stepsSection +
@@ -701,6 +722,7 @@
       '<div class="op-body">' +
       specsAside +
       '<div class="op-main">' +
+      whyCallout("Why this matters", STANDARD_WHY[std.id]) +
       '<section class="op-section"><h3>Current template</h3>' +
       '<p class="op-section-note">The single source of truth — always start from this file. ' + phTag() + "</p>" +
       templateCard +
@@ -930,6 +952,15 @@
     // Searching is about resources — jump to Process & Resources.
     if (state.search) state.section = "process";
     render();
+  });
+
+  // "/" focuses search (unless already typing in a field).
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "/" || app.hidden) return;
+    const t = e.target;
+    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
+    e.preventDefault();
+    document.getElementById("search").focus();
   });
 
   document.getElementById("clear-filter").addEventListener("click", clearAll);

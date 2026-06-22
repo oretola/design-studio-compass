@@ -304,6 +304,22 @@ body {
   line-height: 1.25;
 }
 .tile-count { font-size: 0.8rem; color: var(--muted); margin-top: 5px; }
+.tile-sample {
+  font-family: "Raleway", sans-serif;
+  font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--muted); background: var(--chip-bg);
+  border-radius: 999px; padding: 1px 7px; margin-left: 4px; vertical-align: middle;
+}
+
+/* Orientation / linearity note on the phase index */
+.index-note {
+  margin: 0 0 18px;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-width: 72ch;
+}
+.sample-note { margin: 14px 20px 0; color: var(--muted); font-size: 0.86rem; font-style: italic; }
 
 /* Hover/focus reveal — the colored caption panel */
 .tile-reveal {
@@ -856,6 +872,21 @@ body {
 }
 .topic-why p { margin: 0; color: var(--ink); font-size: 0.95rem; line-height: 1.5; }
 
+/* "Why this matters" callout — the teaching layer, surfaced across the app */
+.why-callout {
+  background: color-mix(in srgb, var(--phase, var(--accent)) 10%, var(--card));
+  border: 1px solid color-mix(in srgb, var(--phase, var(--accent)) 30%, transparent);
+  border-left: 4px solid var(--phase, var(--accent));
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 16px 0 4px;
+}
+.why-callout .why-label { color: var(--phase, var(--accent)); }
+.why-callout p { margin: 0; color: var(--ink); font-size: 0.95rem; line-height: 1.5; }
+/* Inside the phase-detail / one-pager body the callout needs its own spacing */
+.phase-detail .why-callout { margin: 16px 20px 0; }
+.op-main > .why-callout:first-child { margin-top: 0; margin-bottom: 22px; }
+
 @media (max-width: 640px) {
   .topic-layers { grid-template-columns: 1fr; gap: 14px; }
   .lens-detail-body { padding: 18px 16px 22px; }
@@ -1070,6 +1101,8 @@ body {
   font-size: 0.82rem;
   text-align: center;
 }
+.footer-suggest { display: inline-block; margin-top: 6px; color: var(--accent); text-decoration: none; font-weight: 600; }
+.footer-suggest:hover { color: var(--accent-deep); text-decoration: underline; }
 
 /* ============ Placeholder AI assistant ============ */
 .chat-fab {
@@ -1093,6 +1126,11 @@ body {
 }
 .chat-fab:hover { background: var(--accent-deep); transform: translateY(-2px); }
 .chat-fab svg { width: 20px; height: 20px; }
+.chat-fab-soon {
+  font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  background: rgba(255, 255, 255, 0.25); color: #fff;
+  border-radius: 999px; padding: 1px 6px;
+}
 
 .chat-panel {
   position: fixed;

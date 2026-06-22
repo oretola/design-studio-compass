@@ -163,7 +163,34 @@ const STANDARDS = [
   },
 ];
 
-// The 7 phases of the DJDS architecture design process.
+// "Why this matters" teaching copy (placeholder — needs senior-leadership voice).
+// Keyed by phase id, standard id, and Concept section id.
+const PHASE_WHY = {
+  "concept": "[Placeholder — senior voice] This is where the project's values and direction are set. Get it right and everything downstream is easier; rush it and the design loses its grounding in the community and the land.",
+  "schematic": "[Placeholder — senior voice] Translating concept into plans is where ideas meet constraints — the moment to protect the vision as code, budget, and site start pushing back.",
+  "design-dev": "[Placeholder — senior voice] The details resolved here — materials, systems, how a space feels to the body — are where dignity and care become tangible, not just intended.",
+  "entitlements": "[Placeholder — senior voice] Approvals are where community trust and public process are won or lost; how we show up signals whether the project is done with the neighborhood or to it.",
+  "construction-docs": "[Placeholder — senior voice] CDs are the studio's intent made precise — clarity here protects the design through the hands of everyone who builds it.",
+  "bidding": "[Placeholder — senior voice] Who builds it, and on what terms, shapes whether the project creates local opportunity or extracts from the community.",
+  "construction-admin": "[Placeholder — senior voice] Intent erodes in the field unless we steward it; this phase keeps the built result true to the people it's for.",
+  "ffe": "[Placeholder — senior voice] The objects people touch every day carry the project's care into daily use — furniture and fixtures are not an afterthought.",
+};
+const SECTION_WHY = {
+  "ideation": "[Placeholder — senior voice] Divergence before convergence — this is where we resist the first idea and make room for the community's.",
+  "integration": "[Placeholder — senior voice] Synthesis is a values exercise: what we keep and cut reveals whose needs the design actually centers.",
+  "final-concept": "[Placeholder — senior voice] Alignment here isn't sign-off theater — it's making sure the people affected recognize and own the direction.",
+};
+const STANDARD_WHY = {
+  "massing": "[Placeholder — senior voice] How we show volume shapes how communities understand what's coming — clarity here builds trust before a wall is built.",
+  "program": "[Placeholder — senior voice] A program diagram makes spatial priorities legible to non-designers, so the people we serve can actually weigh in.",
+  "rendering": "[Placeholder — senior voice] Renderings set expectation and emotion; our style choices decide who sees themselves in the future we're drawing.",
+  "plan-graphics": "[Placeholder — senior voice] Consistent plan graphics are how the studio speaks with one voice — and how anyone can pick up a drawing and read our intent.",
+  "presentation": "[Placeholder — senior voice] A deck is often the only artifact a community keeps; it should honor their contribution and tell the truth about the work.",
+};
+// Phases that are illustrative stubs (only Concept Development is built out).
+const SAMPLE_PHASES = ["schematic", "design-dev", "entitlements", "construction-docs", "bidding", "construction-admin", "ffe"];
+
+// The 8 phases of the DJDS architecture design process.
 // Concept Development is fully fleshed out with 4 subphases for v1;
 // the others carry a few sample resources each.
 const PHASES = [
