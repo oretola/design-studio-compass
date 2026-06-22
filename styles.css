@@ -363,6 +363,31 @@ body {
 .tile-blurb { font-size: 0.95rem; line-height: 1.4; }
 .tile-cta { font-size: 0.9rem; font-weight: 700; }
 
+/* Studio-wide catch-all card on the phase index */
+.studio-wide-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin-top: 14px;
+  text-align: left;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--card-2);
+  border: 1px dashed var(--line-strong);
+  border-radius: 14px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.studio-wide-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); background: var(--card); }
+.studio-wide-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.sw-icon { flex: none; width: 40px; height: 40px; color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); border-radius: 10px; padding: 8px; }
+.sw-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sw-name { font-weight: 600; font-size: 1.02rem; letter-spacing: -0.01em; }
+.sw-sub { font-size: 0.86rem; color: var(--muted); }
+.sw-cta { margin-left: auto; flex: none; font-size: 0.82rem; font-weight: 600; color: var(--accent); white-space: nowrap; }
+
 /* Task chips below the tiles */
 .tasks { margin-top: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
 .tasks-label {

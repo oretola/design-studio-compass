@@ -64,6 +64,7 @@
     openPhase: null,    // phase id when a tile is opened
     openSub: null,      // subphase id when a one-pager is opened
     openLens: null,     // lens id within a lens-structured subphase (e.g. Predesign)
+    openStudioWide: false, // viewing the studio-wide catch-all list
     openStandard: null, // standard id when a standard page is opened
     calOffset: 0,       // months from the current month, for the calendar view
   };
@@ -164,6 +165,10 @@
         });
       });
     });
+    // Studio-wide (phase-agnostic) resources also live in the index.
+    STUDIO_WIDE.forEach(function (r) {
+      out.push(Object.assign({}, r, { phaseId: "studio-wide", phaseName: "Studio-wide", subName: "" }));
+    });
     return out;
   }
 
@@ -172,7 +177,7 @@
     if (state.needFilter && !(r.needs || []).includes(state.needFilter)) return false;
     if (state.search) {
       const q = state.search.toLowerCase();
-      const hay = (r.title + " " + r.type + " " + r.phaseName + " " + r.subName).toLowerCase();
+      const hay = (r.title + " " + r.type + " " + r.phaseName + " " + r.subName + " " + (r.tags || []).join(" ")).toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -248,15 +253,31 @@
     const note =
       '<p class="index-note">New here? These phases show how a project moves — but the work loops and overlaps, it’s rarely strictly linear. Only <strong>Concept Development</strong> is built out so far; the rest are illustrative. ' + phTag() + "</p>";
 
+    const studioWide =
+      '<button class="studio-wide-card" type="button" id="studio-wide-card">' +
+      '<span class="sw-icon">' + studioWideIcon() + "</span>" +
+      '<span class="sw-text">' +
+      '<span class="sw-name">Studio-wide resources</span>' +
+      '<span class="sw-sub">Guidelines &amp; standards that apply across every phase</span>' +
+      "</span>" +
+      '<span class="sw-cta">' + plural(STUDIO_WIDE.length) + " →</span>" +
+      "</button>";
+
     document.getElementById("content").innerHTML =
-      note + '<div class="tile-grid">' + tiles + "</div>" + chips;
+      note + '<div class="tile-grid">' + tiles + "</div>" + studioWide + chips;
 
     document.querySelectorAll(".tile").forEach(function (t) {
       t.addEventListener("click", function () {
         state.openPhase = t.getAttribute("data-phase");
+        state.openStudioWide = false;
         render();
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
+    });
+    document.getElementById("studio-wide-card").addEventListener("click", function () {
+      state.openStudioWide = true;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
     document.querySelectorAll(".task-chip").forEach(function (chip) {
       chip.addEventListener("click", function () {
@@ -288,7 +309,7 @@
     document.querySelectorAll(".crumb[data-nav]").forEach(function (c) {
       c.addEventListener("click", function () {
         const nav = c.getAttribute("data-nav");
-        if (nav === "root") { state.openPhase = null; state.openSub = null; state.openLens = null; }
+        if (nav === "root") { state.openPhase = null; state.openSub = null; state.openLens = null; state.openStudioWide = false; }
         else if (nav === "phase") { state.openSub = null; state.openLens = null; }
         else if (nav === "subphase") { state.openLens = null; }
         else if (nav === "standards-root") { state.openStandard = null; }
@@ -296,6 +317,39 @@
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
     });
+  }
+
+  function studioWideIcon() {
+    return (
+      '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M3 21h18"/><path d="M5 21V8l7-4 7 4v13"/><path d="M9 21v-6h6v6"/>' +
+      "</svg>"
+    );
+  }
+
+  // ---- View: studio-wide catch-all ----
+  function renderStudioWide() {
+    const items = STUDIO_WIDE.map(function (r) {
+      return Object.assign({}, r, { phaseId: "studio-wide", phaseName: "Studio-wide" });
+    });
+    document.getElementById("content").innerHTML =
+      breadcrumbHtml([{ label: "Process & Resources", nav: "root" }, { label: "Studio-wide" }]) +
+      '<div class="phase-detail" style="--phase: var(--accent)">' +
+      '<header class="detail-head">' +
+      '<span class="detail-icon">' + studioWideIcon() + "</span>" +
+      "<div>" +
+      '<span class="detail-kicker">Applies across all phases</span>' +
+      "<h2>Studio-wide resources</h2>" +
+      '<p class="detail-blurb">Guidelines and standards that apply to every project, regardless of phase.</p>' +
+      "</div>" +
+      '<span class="detail-count">' + plural(items.length) + "</span>" +
+      "</header>" +
+      '<div class="op-section" style="padding: 14px 20px 18px">' +
+      items.map(function (r) { return resourceRow(r, false); }).join("") +
+      "</div>" +
+      "</div>";
+    wireCrumbs();
   }
 
   // ---- View: one phase opened (section cards) ----
@@ -867,6 +921,8 @@
     } else if (state.typeFilter) {
       // Type is a filter: show a flat list of that type (across phases).
       renderGrouped("type", [state.typeFilter], typeLabel);
+    } else if (state.openStudioWide) {
+      renderStudioWide();
     } else if (state.view === "phase") {
       if (state.openPhase && state.openSub) renderOnePager(state.openPhase, state.openSub);
       else if (state.openPhase) renderPhaseDetail(state.openPhase);
@@ -902,6 +958,7 @@
         state.openPhase = null;
         state.openSub = null;
         state.openLens = null;
+        state.openStudioWide = false;
         render();
       });
     });
@@ -943,6 +1000,7 @@
     state.openPhase = null;
     state.openSub = null;
     state.openLens = null;
+    state.openStudioWide = false;
     document.getElementById("search").value = "";
     render();
   }
@@ -961,10 +1019,12 @@
       state.openPhase = null;
       state.openSub = null;
       state.openLens = null;
+      state.openStudioWide = false;
       state.openStandard = null;
       state.calOffset = 0;
       state.view = "phase";
       state.needFilter = null;
+      state.typeFilter = null;
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
@@ -976,6 +1036,7 @@
       state.openPhase = null;
       state.openSub = null;
       state.openLens = null;
+      state.openStudioWide = false;
       state.needFilter = null;
       state.typeFilter = null;
       render();

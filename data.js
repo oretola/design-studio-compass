@@ -163,6 +163,16 @@ const STANDARDS = [
   },
 ];
 
+// Studio-wide resources — apply across every phase (catch-all home for
+// things that don't belong to one phase). Placeholder. `tags` aid search.
+const STUDIO_WIDE = [
+  { title: "Studio Brand Guidelines", type: "Guide", needs: [], tags: ["brand", "logo", "fonts", "color"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-studio-brand" },
+  { title: "Accessibility Standards", type: "Guide", needs: [], tags: ["accessibility", "ada", "inclusive", "neurodivergent"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-studio-accessibility" },
+  { title: "Community Engagement Principles", type: "Guide", needs: ["client-meeting"], tags: ["community", "engagement", "participatory"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-studio-engagement" },
+  { title: "DEI in Subcontracting Guide", type: "Guide", needs: [], tags: ["dei", "equity", "contractors", "hiring"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-studio-dei" },
+  { title: "File Naming & Folder Standards", type: "Checklist", needs: [], tags: ["files", "naming", "organization"], driveUrl: "https://drive.google.com/drive/folders/PLACEHOLDER-studio-filenaming" },
+];
+
 // "Why this matters" teaching copy (placeholder — needs senior-leadership voice).
 // Keyed by phase id, standard id, and Concept section id.
 const PHASE_WHY = {
