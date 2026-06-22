@@ -163,6 +163,15 @@ const STANDARDS = [
   },
 ];
 
+// Recently updated — what returning users most want to see. Placeholder.
+// `daysAgo` keeps it fresh relative to today.
+const WHATS_NEW = [
+  { title: "Massing Diagram Template", note: "v3 released", daysAgo: 2, where: "Standards" },
+  { title: "Predesign — Informed by the Land", note: "lens content added", daysAgo: 4, where: "Concept Development" },
+  { title: "Community Engagement Guide", note: "updated", daysAgo: 9, where: "Concept Development" },
+  { title: "File Naming & Folder Standards", note: "added", daysAgo: 12, where: "Studio-wide" },
+];
+
 // Studio-wide resources — apply across every phase (catch-all home for
 // things that don't belong to one phase). Placeholder. `tags` aid search.
 const STUDIO_WIDE = [

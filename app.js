@@ -69,6 +69,15 @@
     calOffset: 0,       // months from the current month, for the calendar view
   };
 
+  // Suggested prompts under the ask bar (each just runs a search for now).
+  const ASK_SUGGESTIONS = [
+    "Start a new project",
+    "Cost estimate templates",
+    "Massing diagram",
+    "Community engagement",
+    "Site analysis",
+  ];
+
   // Icons for the three Concept lenses.
   const LENS_ICON = {
     "land": '<path d="M3 18l5-8 4 5 3-4 6 7"/><path d="M3 21h18"/>',
@@ -192,6 +201,12 @@
   // Small inline marker so generated/sample text is never mistaken for real content.
   function phTag() { return '<span class="ph-tag">Placeholder</span>'; }
 
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+
   // Image placeholder slot — ready for real project photography.
   function imageSlot(label, cls) {
     return (
@@ -228,72 +243,69 @@
     );
   }
 
-  // ---- View: phase tiles (the landing) ----
-  function renderTiles() {
-    const tiles = PHASES.map(function (phase, i) {
-      const count = phaseTotal(phase);
+  // ---- View: Process home (recently updated + phase browse) ----
+  function renderHome() {
+    const recent = WHATS_NEW.map(function (w) {
       return (
-        '<button class="tile" type="button" data-phase="' + phase.id + '" style="--phase:' + phaseColor(phase.id) + '" ' +
-        'aria-label="' + phase.name + " — " + plural(count) + '">' +
-        '<span class="tile-top">' +
-        '<span class="tile-num">' + (i + 1) + "</span>" +
-        '<span class="tile-icon">' + iconSvg(phase.id) + "</span>" +
-        "</span>" +
-        '<span class="tile-name">' + phase.name + "</span>" +
-        '<span class="tile-count">' + plural(count) +
-        (SAMPLE_PHASES.indexOf(phase.id) !== -1 ? ' <span class="tile-sample">In progress</span>' : "") +
-        "</span>" +
-        '<span class="tile-reveal" aria-hidden="true">' +
-        '<span class="tile-blurb">' + phase.blurb + "</span>" +
-        '<span class="tile-cta">View resources →</span>' +
-        "</span>" +
+        '<li class="recent-item">' +
+        '<span class="recent-dot" aria-hidden="true"></span>' +
+        '<span class="recent-text">' +
+        '<span class="recent-title">' + w.title + "</span>" +
+        '<span class="recent-meta">' + w.note + " · " + w.where + " · " + w.daysAgo + "d ago</span>" +
+        "</span></li>"
+      );
+    }).join("");
+    const recentSection =
+      '<section class="home-block"><h2 class="home-h">Recently updated ' + phTag() + "</h2>" +
+      '<ul class="recent-list">' + recent + "</ul></section>";
+
+    // Featured (built) phase — visually heavier because it has the most content.
+    const concept = PHASES.find(function (p) { return p.id === "concept"; });
+    const featured =
+      '<button class="phase-featured" type="button" data-phase="' + concept.id + '" style="--phase:' + phaseColor(concept.id) + '">' +
+      '<span class="pf-icon">' + iconSvg(concept.id) + "</span>" +
+      '<span class="pf-text">' +
+      '<span class="pf-tag">Built out</span>' +
+      '<span class="pf-name">' + concept.name + "</span>" +
+      '<span class="pf-blurb">' + concept.blurb + "</span>" +
+      "</span>" +
+      '<span class="pf-cta">' + plural(phaseTotal(concept)) + " · Open →</span>" +
+      "</button>";
+
+    // Stub phases — lighter weight, honestly marked as in progress.
+    const stubs = PHASES.filter(function (p) { return p.id !== "concept"; }).map(function (phase) {
+      return (
+        '<button class="phase-stub" type="button" data-phase="' + phase.id + '" style="--phase:' + phaseColor(phase.id) + '">' +
+        '<span class="ps-icon">' + iconSvg(phase.id) + "</span>" +
+        '<span class="ps-name">' + phase.name + "</span>" +
+        '<span class="ps-tag">In progress</span>' +
         "</button>"
       );
     }).join("");
 
-    const chips =
-      '<div class="tasks">' +
-      '<span class="tasks-label">Or jump to a task</span>' +
-      '<div class="tasks-row">' +
-      NEEDS.map(function (n) {
-        return '<button class="task-chip" type="button" data-need="' + n.id + '">' + n.label + "</button>";
-      }).join("") +
-      "</div></div>";
-
-    const note =
-      '<p class="index-note">New here? These phases show how a project moves — but the work loops and overlaps, it’s rarely strictly linear. Only <strong>Concept Development</strong> is built out so far; the rest are illustrative. ' + phTag() + "</p>";
-
     const studioWide =
-      '<button class="studio-wide-card" type="button" id="studio-wide-card">' +
+      '<button class="studio-wide-card" type="button" data-phase="__studio">' +
       '<span class="sw-icon">' + studioWideIcon() + "</span>" +
-      '<span class="sw-text">' +
-      '<span class="sw-name">Studio-wide resources</span>' +
-      '<span class="sw-sub">Guidelines &amp; standards that apply across every phase</span>' +
-      "</span>" +
-      '<span class="sw-cta">' + plural(STUDIO_WIDE.length) + " →</span>" +
-      "</button>";
+      '<span class="sw-text"><span class="sw-name">Studio-wide resources</span>' +
+      '<span class="sw-sub">Guidelines &amp; standards that apply across every phase</span></span>' +
+      '<span class="sw-cta">' + plural(STUDIO_WIDE.length) + " →</span></button>";
 
-    document.getElementById("content").innerHTML =
-      note + '<div class="tile-grid">' + tiles + "</div>" + studioWide + chips;
+    const phaseSection =
+      '<section class="home-block"><h2 class="home-h">Jump into the work — by phase</h2>' +
+      featured +
+      '<div class="stub-grid">' + stubs + "</div>" +
+      studioWide +
+      "</section>";
 
-    document.querySelectorAll(".tile").forEach(function (t) {
-      t.addEventListener("click", function () {
-        state.openPhase = t.getAttribute("data-phase");
-        state.openStudioWide = false;
+    document.getElementById("content").innerHTML = recentSection + phaseSection;
+
+    document.querySelectorAll("#content [data-phase]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        const id = b.getAttribute("data-phase");
+        if (id === "__studio") { state.openStudioWide = true; }
+        else { state.openPhase = id; state.openStudioWide = false; }
         render();
         window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-    });
-    document.getElementById("studio-wide-card").addEventListener("click", function () {
-      state.openStudioWide = true;
-      render();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-    document.querySelectorAll(".task-chip").forEach(function (chip) {
-      chip.addEventListener("click", function () {
-        state.needFilter = chip.getAttribute("data-need");
-        state.view = "question";
-        render();
       });
     });
   }
@@ -645,15 +657,51 @@
   // ---- View: search results (flat, across everything) ----
   function renderSearchResults() {
     const items = allResources().filter(matchesSearchNeed);
-    if (!items.length) {
-      document.getElementById("content").innerHTML = emptyState();
-      return;
-    }
-    document.getElementById("content").innerHTML =
+
+    // Phase shortcut if the query names a phase.
+    const ql = state.search.toLowerCase();
+    const phaseMatch = PHASES.find(function (p) {
+      const pn = p.name.toLowerCase();
+      return ql.indexOf(pn) !== -1 || pn.indexOf(ql) !== -1;
+    });
+
+    // Type filter chips (filter the results).
+    const chips = [{ id: null, label: "All" }].concat(
+      TYPES.map(function (t) { return { id: t, label: t === "Case Study" ? "Case studies" : t + "s" }; })
+    );
+    const chipRow = '<div class="type-chips">' + chips.map(function (c) {
+      const active = (state.typeFilter || null) === c.id ? " is-active" : "";
+      return '<button class="type-chip' + active + '" type="button" data-type="' + (c.id === null ? "" : c.id) + '">' + c.label + "</button>";
+    }).join("") + "</div>";
+
+    let html =
       '<div class="results-list">' +
-      '<h2 class="results-head">Results for "' + state.search + '" <span class="group-count">' + items.length + "</span></h2>" +
-      items.map(function (r) { return resourceRow(r, true); }).join("") +
+      '<div class="results-head-row">' +
+      '<h2 class="results-head">Results for “' + esc(state.search) + '” <span class="group-count">' + items.length + "</span></h2>" +
+      '<button class="clear-search" type="button" id="clear-search">Clear ✕</button>' +
+      "</div>" +
+      chipRow +
+      (phaseMatch ? '<button class="results-phase" type="button" data-phase="' + phaseMatch.id + '">Browse the ' + phaseMatch.name + " phase →</button>" : "") +
+      (items.length ? items.map(function (r) { return resourceRow(r, true); }).join("") : emptyState()) +
       "</div>";
+
+    document.getElementById("content").innerHTML = html;
+
+    document.querySelectorAll(".type-chip").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        state.typeFilter = chip.getAttribute("data-type") || null;
+        render();
+      });
+    });
+    const cs = document.getElementById("clear-search");
+    if (cs) cs.addEventListener("click", clearAll);
+    const rp = document.querySelector(".results-phase");
+    if (rp) rp.addEventListener("click", function () {
+      state.openPhase = rp.getAttribute("data-phase");
+      state.search = ""; state.typeFilter = null; state.openStudioWide = false;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
   }
 
   function emptyState() {
@@ -897,123 +945,71 @@
 
   // ---- Main render ----
   function render() {
-    // Top-level section active state.
     document.querySelectorAll(".topnav-btn").forEach(function (btn) {
       btn.classList.toggle("is-active", btn.getAttribute("data-section") === state.section);
     });
-    const filterbar = document.getElementById("filterbar");
-    const browseHead = document.getElementById("browse-head");
-    const typebar = document.getElementById("typebar");
+    const askHero = document.getElementById("ask-hero");
 
-    // Values, Standards, and the Calendar are standalone top-level sections.
+    // Standalone top-level sections (no ask hero).
     if (state.section === "values" || state.section === "calendar" || state.section === "standards") {
-      filterbar.hidden = true;
-      if (browseHead) browseHead.hidden = true;
-      if (typebar) typebar.hidden = true;
+      if (askHero) askHero.hidden = true;
       if (state.section === "values") renderValues();
       else if (state.section === "calendar") renderCalendar();
       else if (state.openStandard) renderStandardDetail(state.openStandard);
       else renderStandards();
-      document.getElementById("result-count").textContent = "";
-      document.getElementById("clear-filter").hidden = true;
       return;
     }
-    filterbar.hidden = false;
-    if (browseHead) browseHead.hidden = false;
-    if (typebar) typebar.hidden = false;
 
-    // Filter bar active state.
-    document.querySelectorAll(".filter-btn").forEach(function (btn) {
-      btn.classList.toggle("is-active", btn.getAttribute("data-view") === state.view);
-    });
-    renderTypeChips();
+    // Process & Resources — the ask/search hero is the primary path.
+    const drilled = !!(state.openPhase || state.openStudioWide);
+    if (askHero) askHero.hidden = drilled;
+    syncAsk();
 
-    if (state.search) {
-      renderSearchResults();
-    } else if (state.typeFilter) {
-      // Type is a filter: show a flat list of that type (across phases).
-      renderGrouped("type", [state.typeFilter], typeLabel);
-    } else if (state.openStudioWide) {
-      renderStudioWide();
-    } else if (state.view === "phase") {
-      if (state.openPhase && state.openSub) renderOnePager(state.openPhase, state.openSub);
-      else if (state.openPhase) renderPhaseDetail(state.openPhase);
-      else renderTiles();
-    } else if (state.view === "question") {
-      renderGrouped("need", NEEDS.map(function (n) { return n.id; }), function (id) {
-        const n = NEEDS.find(function (x) { return x.id === id; });
-        return n ? n.label : id;
-      });
-    }
+    if (state.search) renderSearchResults();
+    else if (state.openStudioWide) renderStudioWide();
+    else if (state.openPhase && state.openSub) renderOnePager(state.openPhase, state.openSub);
+    else if (state.openPhase) renderPhaseDetail(state.openPhase);
+    else renderHome();
 
-    updateMeta();
     wireEmptyReset();
   }
 
   function typeLabel(t) { return t === "Case Study" ? "Case studies &amp; examples" : t + "s"; }
 
-  // Type filter chips ("All" + each type).
-  function renderTypeChips() {
-    const row = document.getElementById("type-chips");
-    if (!row) return;
-    const chips = [{ id: null, label: "All" }].concat(
-      TYPES.map(function (t) { return { id: t, label: t === "Case Study" ? "Case studies" : t + "s" }; })
-    );
-    row.innerHTML = chips.map(function (c) {
-      const active = (state.typeFilter || null) === c.id ? " is-active" : "";
-      return '<button class="type-chip' + active + '" type="button" data-type="' + (c.id === null ? "" : c.id) + '">' + c.label + "</button>";
+  // Keep the ask input + suggestion chips in sync with state.
+  function syncAsk() {
+    const input = document.getElementById("ask-input");
+    const clear = document.getElementById("ask-clear");
+    const sug = document.getElementById("ask-suggests");
+    if (input && input.value !== state.search) input.value = state.search;
+    if (clear) clear.hidden = !state.search;
+    if (!sug) return;
+    if (state.search) { sug.hidden = true; return; }
+    sug.hidden = false;
+    sug.innerHTML = ASK_SUGGESTIONS.map(function (s) {
+      return '<button class="ask-suggest" type="button">' + s + "</button>";
     }).join("");
-    row.querySelectorAll(".type-chip").forEach(function (chip) {
-      chip.addEventListener("click", function () {
-        const t = chip.getAttribute("data-type");
-        state.typeFilter = t || null;
-        state.openPhase = null;
-        state.openSub = null;
-        state.openLens = null;
-        state.openStudioWide = false;
-        render();
-      });
+    sug.querySelectorAll(".ask-suggest").forEach(function (b) {
+      b.addEventListener("click", function () { setSearch(b.textContent); });
     });
   }
 
-  function updateMeta() {
-    const total = allResources().filter(matchesSearchNeed).length;
-    document.getElementById("result-count").textContent = plural(total);
-
-    const clearBtn = document.getElementById("clear-filter");
-    const labels = [];
-    if (state.openPhase) {
-      const p = PHASES.find(function (x) { return x.id === state.openPhase; });
-      labels.push(p ? p.name : state.openPhase);
-      if (state.openSub && p) {
-        const sub = p.subphases.find(function (s) { return s.id === state.openSub; });
-        if (sub) labels.push(sub.name);
-      }
-    }
-    if (state.needFilter) {
-      const n = NEEDS.find(function (x) { return x.id === state.needFilter; });
-      labels.push(n ? n.label : state.needFilter);
-    }
-    if (state.typeFilter) labels.push(state.typeFilter === "Case Study" ? "Case studies" : state.typeFilter + "s");
-    if (state.search) labels.push('"' + state.search + '"');
-
-    if (labels.length) {
-      clearBtn.hidden = false;
-      clearBtn.textContent = "Clear: " + labels.join(" · ") + " ✕";
-    } else {
-      clearBtn.hidden = true;
-    }
+  function setSearch(q) {
+    state.search = q;
+    state.openPhase = null; state.openSub = null; state.openLens = null;
+    state.openStudioWide = false; state.typeFilter = null;
+    render();
+    const input = document.getElementById("ask-input");
+    if (input) input.focus();
   }
 
   function clearAll() {
     state.search = "";
-    state.needFilter = null;
     state.typeFilter = null;
     state.openPhase = null;
     state.openSub = null;
     state.openLens = null;
     state.openStudioWide = false;
-    document.getElementById("search").value = "";
     render();
   }
 
@@ -1026,52 +1022,65 @@
   document.querySelectorAll(".topnav-btn").forEach(function (btn) {
     btn.addEventListener("click", function () {
       state.section = btn.getAttribute("data-section");
-      // Returning to a top-level section lands on its clean index, not a deep
-      // view or a stale filter.
+      // Returning to a top-level section lands on its clean index.
       state.openPhase = null;
       state.openSub = null;
       state.openLens = null;
       state.openStudioWide = false;
       state.openStandard = null;
       state.calOffset = 0;
-      state.view = "phase";
-      state.needFilter = null;
+      state.search = "";
       state.typeFilter = null;
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   });
 
-  document.querySelectorAll(".filter-btn").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      state.view = btn.getAttribute("data-view");
-      state.openPhase = null;
-      state.openSub = null;
-      state.openLens = null;
-      state.openStudioWide = false;
-      state.needFilter = null;
-      state.typeFilter = null;
+  // Ask / search hero — the primary path.
+  (function initAsk() {
+    const input = document.getElementById("ask-input");
+    const form = document.getElementById("ask-form");
+    const clear = document.getElementById("ask-clear");
+    if (!input || !form) return;
+    input.addEventListener("input", function (e) {
+      state.search = e.target.value.trim();
+      if (state.search) {
+        state.section = "process";
+        state.openPhase = null; state.openSub = null; state.openLens = null; state.openStudioWide = false;
+      }
       render();
     });
-  });
+    form.addEventListener("submit", function (e) { e.preventDefault(); });
+    if (clear) clear.addEventListener("click", function () { clearAll(); input.focus(); });
+  })();
 
-  document.getElementById("search").addEventListener("input", function (e) {
-    state.search = e.target.value.trim();
-    // Searching is about resources — jump to Process & Resources.
-    if (state.search) state.section = "process";
-    render();
-  });
+  // "New here?" — onboarding on demand (jumps to Values & Culture).
+  (function initNewHere() {
+    const btn = document.getElementById("new-here");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      state.section = "values";
+      state.openPhase = null; state.openSub = null; state.openLens = null;
+      state.openStudioWide = false; state.openStandard = null;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  })();
 
-  // "/" focuses search (unless already typing in a field).
+  // "/" focuses the ask bar (returns to the Process home if needed).
   document.addEventListener("keydown", function (e) {
     if (e.key !== "/" || app.hidden) return;
     const t = e.target;
     if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
     e.preventDefault();
-    document.getElementById("search").focus();
+    if (state.section !== "process" || state.openPhase || state.openStudioWide) {
+      state.section = "process";
+      state.openPhase = null; state.openSub = null; state.openLens = null; state.openStudioWide = false;
+      render();
+    }
+    const input = document.getElementById("ask-input");
+    if (input) input.focus();
   });
-
-  document.getElementById("clear-filter").addEventListener("click", clearAll);
 
   // ---- Init: when the gate is disabled, reveal the app directly ----
   if (!GATE_ENABLED) {
@@ -1092,144 +1101,4 @@
     });
   })();
 
-  // ---- Placeholder AI assistant (future integration) ----
-  (function initChat() {
-    const fab = document.getElementById("chat-fab");
-    const panel = document.getElementById("chat-panel");
-    const closeBtn = document.getElementById("chat-close");
-    const messages = document.getElementById("chat-messages");
-    const suggests = document.getElementById("chat-suggests");
-    const form = document.getElementById("chat-form");
-    const input = document.getElementById("chat-text");
-    if (!fab || !panel) return;
-
-    const SUGGESTIONS = [
-      "How do I start a new project?",
-      "Where are the cost estimate templates?",
-      "What happens during Entitlements & Approvals?",
-    ];
-    const INTRO = "Hi! I'm the Design Studio Assistant — an early preview. I can search the studio index and point you to resources and phases. (A full conversational version comes later.)";
-    let seeded = false;
-
-    function esc(s) {
-      return String(s).replace(/[&<>"]/g, function (c) {
-        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
-      });
-    }
-    function addMessage(role, text) {
-      const el = document.createElement("div");
-      el.className = "chat-msg chat-msg-" + role;
-      el.textContent = text;
-      messages.appendChild(el);
-      messages.scrollTop = messages.scrollHeight;
-    }
-    function addRich(html) {
-      const el = document.createElement("div");
-      el.className = "chat-msg chat-msg-assistant";
-      el.innerHTML = html;
-      messages.appendChild(el);
-      messages.scrollTop = messages.scrollHeight;
-      return el;
-    }
-
-    // Grounded keyword search over the resource index.
-    function findResources(q) {
-      const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
-      if (!terms.length) return [];
-      return allResources().filter(function (r) {
-        const hay = (r.title + " " + r.type + " " + r.phaseName + " " + (r.subName || "") + " " + (r.tags || []).join(" ")).toLowerCase();
-        return terms.every(function (t) { return hay.indexOf(t) !== -1; });
-      });
-    }
-    function findPhase(q) {
-      const ql = q.toLowerCase();
-      return PHASES.find(function (p) {
-        const pn = p.name.toLowerCase();
-        return ql.indexOf(pn) !== -1 || pn.indexOf(ql) !== -1;
-      });
-    }
-
-    function renderSuggestions() {
-      suggests.innerHTML = SUGGESTIONS.map(function (s) {
-        return '<button class="chat-suggest" type="button">' + s + "</button>";
-      }).join("");
-      suggests.querySelectorAll(".chat-suggest").forEach(function (b) {
-        b.addEventListener("click", function () { sendMessage(b.textContent); });
-      });
-    }
-
-    function seed() {
-      if (seeded) return;
-      seeded = true;
-      addMessage("assistant", INTRO);
-      renderSuggestions();
-    }
-
-    function sendMessage(text) {
-      text = (text || "").trim();
-      if (!text) return;
-      addMessage("user", text);
-      input.value = "";
-      suggests.hidden = true;
-
-      const results = findResources(text);
-      const phase = findPhase(text);
-
-      if (!results.length && !phase) {
-        addMessage("assistant", "I didn't find anything in the index for “" + text + ".” Try different words or browse the tabs above. (Simple keyword preview — a smarter assistant comes later.)");
-        return;
-      }
-
-      let html = "<p>Here’s what I found in the index:</p>";
-      if (results.length) {
-        html += '<ul class="chat-results">' + results.slice(0, 6).map(function (r) {
-          return '<li><a href="' + r.driveUrl + '" target="_blank" rel="noopener">' + esc(r.title) + "</a>" +
-            '<span class="chat-res-meta">' + esc(r.type) + " · " + esc(r.phaseName) + "</span></li>";
-        }).join("") + "</ul>";
-        if (results.length > 6) html += '<p class="chat-more">+' + (results.length - 6) + " more — refine your search.</p>";
-      } else {
-        html += "<p>No specific resources matched, but this phase looks relevant:</p>";
-      }
-      html += '<p class="chat-note">Simple keyword preview — the full assistant will understand questions and reason over this content.</p>';
-      const bubble = addRich(html);
-
-      if (phase) {
-        const btn = document.createElement("button");
-        btn.className = "chat-gobtn";
-        btn.type = "button";
-        btn.textContent = "Browse the " + phase.name + " phase →";
-        btn.addEventListener("click", function () {
-          state.section = "process"; state.view = "phase";
-          state.openPhase = phase.id; state.openSub = null; state.openLens = null;
-          state.openStudioWide = false; state.openStandard = null;
-          state.search = ""; state.typeFilter = null; state.needFilter = null;
-          document.getElementById("search").value = "";
-          closeChat();
-          render();
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        });
-        bubble.appendChild(btn);
-        messages.scrollTop = messages.scrollHeight;
-      }
-    }
-
-    function openChat() {
-      seed();
-      panel.hidden = false;
-      fab.setAttribute("aria-expanded", "true");
-      input.focus();
-    }
-    function closeChat() {
-      panel.hidden = true;
-      fab.setAttribute("aria-expanded", "false");
-      fab.focus();
-    }
-
-    fab.addEventListener("click", function () { if (panel.hidden) openChat(); else closeChat(); });
-    closeBtn.addEventListener("click", closeChat);
-    form.addEventListener("submit", function (e) { e.preventDefault(); sendMessage(input.value); });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && !panel.hidden) closeChat();
-    });
-  })();
 })();

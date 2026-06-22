@@ -764,8 +764,9 @@ body {
 /* ============ Top-level nav ============ */
 .topnav {
   display: flex;
-  gap: 8px;
-  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin-bottom: 24px;
   border-bottom: 1px solid var(--line);
 }
 .topnav-btn {
@@ -773,17 +774,137 @@ body {
   border: none;
   border-bottom: 3px solid transparent;
   margin-bottom: -1px;
-  padding: 8px 14px 14px;
-  text-align: left;
+  padding: 8px 6px 12px;
   cursor: pointer;
   font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--muted);
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 .topnav-btn:hover { color: var(--ink-soft); }
-.topnav-label { display: block; font-size: 1.08rem; font-weight: 700; letter-spacing: -0.015em; }
-.topnav-sub { display: block; font-size: 0.8rem; margin-top: 1px; }
 .topnav-btn.is-active { color: var(--ink); border-bottom-color: var(--accent); }
+
+.new-here-btn {
+  background: none; border: 1px solid var(--line-strong); border-radius: 999px;
+  padding: 7px 14px; font-family: inherit; font-size: 0.85rem; font-weight: 600;
+  color: var(--ink-soft); cursor: pointer; transition: all 0.15s ease;
+}
+.new-here-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ============ Ask / search hero (primary path) ============ */
+.ask-hero { text-align: center; margin: 10px 0 30px; }
+.ask-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 14px; }
+.ask-bar {
+  position: relative;
+  display: flex; align-items: center;
+  max-width: 640px; margin: 0 auto;
+  background: var(--card);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  padding: 0 10px 0 16px;
+}
+.ask-bar:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+.ask-icon { color: var(--muted); font-size: 1.2rem; flex: none; }
+.ask-input {
+  flex: 1; min-width: 0;
+  border: none; background: none; outline: none;
+  font-family: inherit; font-size: 1.05rem; color: var(--ink);
+  padding: 15px 10px;
+}
+.ask-clear {
+  flex: none; background: none; border: none; cursor: pointer;
+  color: var(--muted); font-size: 0.95rem; padding: 6px 8px; border-radius: 999px;
+}
+.ask-clear:hover { color: var(--ink); background: var(--chip-bg); }
+.ask-suggests { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 14px auto 0; max-width: 640px; }
+.ask-suggest {
+  background: var(--card); border: 1px solid var(--line-strong); border-radius: 999px;
+  padding: 6px 13px; font-family: inherit; font-size: 0.84rem; color: var(--ink-soft); cursor: pointer;
+  transition: all 0.15s ease;
+}
+.ask-suggest:hover { border-color: var(--accent); color: var(--accent); }
+.ask-note { margin: 14px 0 0; font-size: 0.8rem; color: var(--muted); }
+
+/* ============ Home blocks (recently updated + phase browse) ============ */
+.home-block { margin-bottom: 30px; }
+.home-h {
+  font-family: "Raleway", sans-serif;
+  font-size: 1.15rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+  margin: 0 0 14px; padding-bottom: 6px; border-bottom: 2px solid var(--accent);
+  display: inline-block;
+}
+.recent-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.recent-item { display: flex; align-items: center; gap: 12px; padding: 10px 4px; border-bottom: 1px solid var(--line); }
+.recent-item:last-child { border-bottom: none; }
+.recent-dot { flex: none; width: 8px; height: 8px; border-radius: 999px; background: var(--accent); }
+.recent-text { display: flex; flex-direction: column; gap: 1px; }
+.recent-title { font-weight: 600; font-size: 0.95rem; }
+.recent-meta { font-size: 0.8rem; color: var(--muted); }
+
+/* Featured (built) phase — visually heaviest */
+.phase-featured {
+  display: flex; align-items: center; gap: 18px; width: 100%; text-align: left;
+  font-family: inherit; color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--phase);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 22px 24px; margin-bottom: 14px; cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.phase-featured:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); }
+.phase-featured:focus-visible { outline: 3px solid var(--phase); outline-offset: 2px; }
+.pf-icon { flex: none; width: 56px; height: 56px; color: var(--phase); background: color-mix(in srgb, var(--phase) 14%, transparent); border-radius: 14px; padding: 12px; }
+.pf-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.pf-tag {
+  font-family: "Raleway", sans-serif; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+  color: #fff; background: var(--phase); border-radius: 999px; padding: 2px 8px; align-self: flex-start;
+}
+.pf-name { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; }
+.pf-blurb { font-size: 0.92rem; color: var(--muted); }
+.pf-cta { margin-left: auto; flex: none; font-size: 0.88rem; font-weight: 600; color: var(--phase); white-space: nowrap; }
+
+/* Stub phases — lighter weight */
+.stub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.phase-stub {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+  text-align: left; font-family: inherit; color: var(--ink-soft);
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px; cursor: pointer; opacity: 0.92;
+  transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+.phase-stub:hover { opacity: 1; transform: translateY(-2px); box-shadow: var(--shadow); }
+.phase-stub:focus-visible { outline: 3px solid var(--phase); outline-offset: 2px; }
+.ps-icon { width: 26px; height: 26px; color: var(--phase); opacity: 0.8; }
+.ps-name { font-size: 0.92rem; font-weight: 600; line-height: 1.25; }
+.ps-tag {
+  font-family: "Raleway", sans-serif; font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--muted); background: var(--chip-bg); border-radius: 999px; padding: 1px 7px;
+}
+
+/* Search results controls */
+.results-head-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.results-head-row .results-head { margin: 0; }
+.clear-search {
+  margin-left: auto; flex: none; background: var(--chip-bg); border: none; border-radius: 999px;
+  padding: 6px 12px; font-family: inherit; font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); cursor: pointer;
+}
+.clear-search:hover { color: var(--ink); }
+.results-list .type-chips { margin: 0 0 14px; }
+.results-phase {
+  display: inline-block; margin: 0 0 14px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: 999px; padding: 8px 14px;
+  font-family: inherit; font-size: 0.85rem; font-weight: 600; color: var(--accent-deep); cursor: pointer;
+}
+.results-phase:hover { background: color-mix(in srgb, var(--accent) 20%, transparent); }
 .topnav-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
 
 /* ============ Values & Culture ============ */

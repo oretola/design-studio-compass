@@ -46,19 +46,14 @@
       <em>placeholder text</em> — not official DJDS content.</span>
       <button class="proto-dismiss" id="proto-dismiss" type="button" aria-label="Dismiss notice">✕</button>
     </div>
+
     <header class="app-header">
       <div class="brand">
         <span class="brand-logo"><img src="assets/djds-logo-white.png" alt="Designing Justice + Designing Spaces" /></span>
-        <div>
-          <h1>Design Studio Compass</h1>
-          <p class="brand-sub">Your map to every template, guide, and tool — organized around how we design.</p>
-        </div>
+        <h1>Design Studio Compass</h1>
       </div>
       <div class="header-tools">
-        <div class="search-wrap">
-          <span class="search-icon" aria-hidden="true">⌕</span>
-          <input type="search" id="search" class="search" placeholder="Search all resources…   /" aria-label="Search resources" />
-        </div>
+        <button class="new-here-btn" id="new-here" type="button">New here?</button>
         <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch color theme">
           <span class="theme-icon" aria-hidden="true"></span>
         </button>
@@ -67,47 +62,23 @@
 
     <!-- Top-level sections -->
     <nav class="topnav" aria-label="Main sections">
-      <button class="topnav-btn" data-section="values" type="button">
-        <span class="topnav-label">Values &amp; Culture</span>
-        <span class="topnav-sub">What we believe</span>
-      </button>
-      <button class="topnav-btn is-active" data-section="process" type="button">
-        <span class="topnav-label">Process &amp; Resources</span>
-        <span class="topnav-sub">How we work, phase by phase</span>
-      </button>
-      <button class="topnav-btn" data-section="standards" type="button">
-        <span class="topnav-label">Standards</span>
-        <span class="topnav-sub">Templates &amp; deliverable styles</span>
-      </button>
-      <button class="topnav-btn" data-section="calendar" type="button">
-        <span class="topnav-label">Design Studio Calendar</span>
-        <span class="topnav-sub">Upcoming studio events</span>
-      </button>
+      <button class="topnav-btn" data-section="values" type="button">Values &amp; Culture</button>
+      <button class="topnav-btn is-active" data-section="process" type="button">Process &amp; Resources</button>
+      <button class="topnav-btn" data-section="standards" type="button">Standards</button>
+      <button class="topnav-btn" data-section="calendar" type="button">Design Studio Calendar</button>
     </nav>
 
-    <!-- "Ways to filter" sub-header (Process & Resources only) -->
-    <div class="browse-head" id="browse-head">
-      <span class="browse-kicker">The index</span>
-      <span class="browse-hint">Jump in and scroll — or filter the index by phase, type, or task.</span>
-    </div>
-
-    <!-- Simple filter bar (Process & Resources only) -->
-    <nav class="filterbar" id="filterbar" aria-label="Browse resources by">
-      <div class="filter-group" role="group" aria-label="View">
-        <button class="filter-btn is-active" data-view="phase">By phase</button>
-        <button class="filter-btn" data-view="question">By question</button>
-      </div>
-      <div class="results-meta">
-        <span id="result-count" class="result-count"></span>
-        <button id="clear-filter" class="clear-filter" type="button" hidden></button>
-      </div>
-    </nav>
-
-    <!-- Type is a filter, not a primary mode -->
-    <div class="typebar" id="typebar">
-      <span class="typebar-label">Filter by type</span>
-      <div class="type-chips" id="type-chips"></div>
-    </div>
+    <!-- Ask / search hero — the primary path (Process & Resources) -->
+    <section class="ask-hero" id="ask-hero" aria-label="Ask or search">
+      <h2 class="ask-title">What do you need?</h2>
+      <form class="ask-bar" id="ask-form" role="search">
+        <span class="ask-icon" aria-hidden="true">⌕</span>
+        <input type="search" id="ask-input" class="ask-input" placeholder="Ask a question or search resources…   /" aria-label="Ask or search resources" autocomplete="off" />
+        <button type="button" class="ask-clear" id="ask-clear" aria-label="Clear" hidden>✕</button>
+      </form>
+      <div class="ask-suggests" id="ask-suggests"></div>
+      <p class="ask-note">Searches the studio index for now — a conversational assistant (powered by Claude) is the next step. <span class="ph-tag">Placeholder</span></p>
+    </section>
 
     <main id="content" class="content"></main>
 
@@ -116,38 +87,6 @@
       <br />
       <a class="footer-suggest" href="mailto:othomas@designingjustice.org?subject=Design%20Studio%20Compass%20%E2%80%94%20suggestion%20or%20fix">Suggest a resource or flag something →</a>
     </footer>
-
-    <!-- Placeholder AI assistant (future integration) -->
-    <button id="chat-fab" class="chat-fab" type="button" aria-label="Open the Design Studio Assistant" aria-expanded="false">
-      <span class="chat-fab-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L3 20l1.1-5A8.5 8.5 0 1 1 21 11.5z"/></svg>
-      </span>
-      <span class="chat-fab-text">Ask</span>
-      <span class="chat-fab-soon">beta</span>
-    </button>
-
-    <div id="chat-panel" class="chat-panel" role="dialog" aria-label="Design Studio Assistant" hidden>
-      <header class="chat-header">
-        <div class="chat-id">
-          <span class="chat-avatar" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L3 20l1.1-5A8.5 8.5 0 1 1 21 11.5z"/></svg>
-          </span>
-          <div>
-            <span class="chat-name">Design Studio Assistant</span>
-            <span class="chat-status">Preview <span class="ph-tag">Placeholder</span></span>
-          </div>
-        </div>
-        <button id="chat-close" class="chat-close" type="button" aria-label="Close assistant">✕</button>
-      </header>
-      <div id="chat-messages" class="chat-messages" aria-live="polite"></div>
-      <div id="chat-suggests" class="chat-suggests"></div>
-      <form id="chat-form" class="chat-input">
-        <input id="chat-text" type="text" placeholder="Ask what you need…" autocomplete="off" aria-label="Message the assistant" />
-        <button type="submit" class="chat-send" aria-label="Send message">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l16-8-6 16-3-7-7-1z"/></svg>
-        </button>
-      </form>
-    </div>
   </div>
 
   <script src="data.js"></script>
