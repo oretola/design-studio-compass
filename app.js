@@ -727,15 +727,6 @@
       );
     }).join("");
 
-    const cultureCards = CULTURE.map(function (c) {
-      return (
-        '<div class="culture-item">' +
-        '<h4 class="culture-title">' + c.title + "</h4>" +
-        '<p class="culture-body">' + c.body + "</p>" +
-        "</div>"
-      );
-    }).join("");
-
     const intro = (Array.isArray(VALUES_INTRO.body) ? VALUES_INTRO.body : [VALUES_INTRO.body])
       .map(function (p) { return '<p class="values-lead">' + p + "</p>"; }).join("");
 
@@ -752,8 +743,6 @@
       '<h3 class="values-section-head">Design Studio Ethos</h3>' +
       '<p class="values-note">Hover (or focus) a square to read more.</p>' +
       '<div class="ethos-grid">' + ethosSquares + "</div>" +
-      '<h3 class="values-section-head">Our culture ' + phTag() + "</h3>" +
-      '<div class="culture-grid">' + cultureCards + "</div>" +
       "</section>";
   }
 
