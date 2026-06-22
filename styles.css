@@ -115,6 +115,9 @@ body {
 
 /* ============ Prototype banner + placeholder tags ============ */
 .proto-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
   background: color-mix(in srgb, var(--accent) 14%, var(--card));
   border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
   color: var(--ink-soft);
@@ -124,6 +127,13 @@ body {
   margin-bottom: 22px;
 }
 .proto-banner strong { color: var(--accent-deep); }
+.proto-dismiss {
+  flex: none; margin-left: auto;
+  background: none; border: none; cursor: pointer;
+  color: var(--accent-deep); font-size: 0.85rem; line-height: 1;
+  padding: 2px 4px; border-radius: 5px;
+}
+.proto-dismiss:hover { background: color-mix(in srgb, var(--accent) 20%, transparent); }
 .ph-tag {
   display: inline-block;
   vertical-align: middle;
@@ -1264,6 +1274,20 @@ body {
   color: #fff;
   border-bottom-right-radius: 4px;
 }
+.chat-msg p { margin: 0 0 4px; }
+.chat-msg a { color: var(--accent-deep); font-weight: 600; }
+.chat-results { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.chat-results li { display: flex; flex-direction: column; }
+.chat-res-meta { font-size: 0.72rem; color: var(--muted); }
+.chat-note { margin: 8px 0 0; font-size: 0.72rem; color: var(--muted); font-style: italic; }
+.chat-more { margin: 6px 0 0; font-size: 0.78rem; color: var(--muted); }
+.chat-gobtn {
+  margin-top: 8px;
+  background: var(--accent); color: #fff; border: none;
+  border-radius: 999px; padding: 7px 14px;
+  font-family: inherit; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+}
+.chat-gobtn:hover { background: var(--accent-deep); }
 
 .chat-suggests { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 10px; }
 .chat-suggest {

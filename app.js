@@ -1080,6 +1080,18 @@
     render();
   }
 
+  // ---- Dismissible prototype banner ----
+  (function initBanner() {
+    const banner = document.querySelector(".proto-banner");
+    const x = document.getElementById("proto-dismiss");
+    if (!banner || !x) return;
+    try { if (localStorage.getItem("dsc-banner-dismissed") === "1") banner.hidden = true; } catch (e) {}
+    x.addEventListener("click", function () {
+      banner.hidden = true;
+      try { localStorage.setItem("dsc-banner-dismissed", "1"); } catch (e) {}
+    });
+  })();
+
   // ---- Placeholder AI assistant (future integration) ----
   (function initChat() {
     const fab = document.getElementById("chat-fab");
@@ -1096,16 +1108,45 @@
       "Where are the cost estimate templates?",
       "What happens during Entitlements & Approvals?",
     ];
-    const INTRO = "Hi! I'm the Design Studio Assistant — coming soon. Tell me what you're trying to do and I'll point you to the right phase, template, or example.";
-    const CANNED = "[Placeholder] I'm not connected to a real assistant yet. In the future I'll answer directly and link you to the right phase, template, or example. For now, use the tabs above to browse.";
+    const INTRO = "Hi! I'm the Design Studio Assistant — an early preview. I can search the studio index and point you to resources and phases. (A full conversational version comes later.)";
     let seeded = false;
 
+    function esc(s) {
+      return String(s).replace(/[&<>"]/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+      });
+    }
     function addMessage(role, text) {
       const el = document.createElement("div");
       el.className = "chat-msg chat-msg-" + role;
       el.textContent = text;
       messages.appendChild(el);
       messages.scrollTop = messages.scrollHeight;
+    }
+    function addRich(html) {
+      const el = document.createElement("div");
+      el.className = "chat-msg chat-msg-assistant";
+      el.innerHTML = html;
+      messages.appendChild(el);
+      messages.scrollTop = messages.scrollHeight;
+      return el;
+    }
+
+    // Grounded keyword search over the resource index.
+    function findResources(q) {
+      const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+      if (!terms.length) return [];
+      return allResources().filter(function (r) {
+        const hay = (r.title + " " + r.type + " " + r.phaseName + " " + (r.subName || "") + " " + (r.tags || []).join(" ")).toLowerCase();
+        return terms.every(function (t) { return hay.indexOf(t) !== -1; });
+      });
+    }
+    function findPhase(q) {
+      const ql = q.toLowerCase();
+      return PHASES.find(function (p) {
+        const pn = p.name.toLowerCase();
+        return ql.indexOf(pn) !== -1 || pn.indexOf(ql) !== -1;
+      });
     }
 
     function renderSuggestions() {
@@ -1130,7 +1171,46 @@
       addMessage("user", text);
       input.value = "";
       suggests.hidden = true;
-      addMessage("assistant", CANNED);
+
+      const results = findResources(text);
+      const phase = findPhase(text);
+
+      if (!results.length && !phase) {
+        addMessage("assistant", "I didn't find anything in the index for “" + text + ".” Try different words or browse the tabs above. (Simple keyword preview — a smarter assistant comes later.)");
+        return;
+      }
+
+      let html = "<p>Here’s what I found in the index:</p>";
+      if (results.length) {
+        html += '<ul class="chat-results">' + results.slice(0, 6).map(function (r) {
+          return '<li><a href="' + r.driveUrl + '" target="_blank" rel="noopener">' + esc(r.title) + "</a>" +
+            '<span class="chat-res-meta">' + esc(r.type) + " · " + esc(r.phaseName) + "</span></li>";
+        }).join("") + "</ul>";
+        if (results.length > 6) html += '<p class="chat-more">+' + (results.length - 6) + " more — refine your search.</p>";
+      } else {
+        html += "<p>No specific resources matched, but this phase looks relevant:</p>";
+      }
+      html += '<p class="chat-note">Simple keyword preview — the full assistant will understand questions and reason over this content.</p>';
+      const bubble = addRich(html);
+
+      if (phase) {
+        const btn = document.createElement("button");
+        btn.className = "chat-gobtn";
+        btn.type = "button";
+        btn.textContent = "Browse the " + phase.name + " phase →";
+        btn.addEventListener("click", function () {
+          state.section = "process"; state.view = "phase";
+          state.openPhase = phase.id; state.openSub = null; state.openLens = null;
+          state.openStudioWide = false; state.openStandard = null;
+          state.search = ""; state.typeFilter = null; state.needFilter = null;
+          document.getElementById("search").value = "";
+          closeChat();
+          render();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+        bubble.appendChild(btn);
+        messages.scrollTop = messages.scrollHeight;
+      }
     }
 
     function openChat() {
