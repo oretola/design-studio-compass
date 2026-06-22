@@ -84,6 +84,9 @@
   }
 
   // ---- Sign-in gate ----
+  // Temporarily disabled — set to true to re-enable the shared-password gate.
+  const GATE_ENABLED = false;
+
   const gate = document.getElementById("gate");
   const app = document.getElementById("app");
   const gateForm = document.getElementById("gate-form");
@@ -807,6 +810,13 @@
   });
 
   document.getElementById("clear-filter").addEventListener("click", clearAll);
+
+  // ---- Init: when the gate is disabled, reveal the app directly ----
+  if (!GATE_ENABLED) {
+    gate.hidden = true;
+    app.hidden = false;
+    render();
+  }
 
   // ---- Placeholder AI assistant (future integration) ----
   (function initChat() {
