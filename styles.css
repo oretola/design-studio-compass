@@ -7,7 +7,7 @@
   --card-2: #faf8f4;
   --ink: #1c2530;
   --ink-soft: #3d4856;
-  --muted: #6b7280;
+  --muted: #5a6068;        /* darkened to clear WCAG AA on the warm bg */
   --line: #e6e2d9;
   --line-strong: #d6d0c4;
   --accent: #009ca7;        /* DJDS brand teal */
@@ -1022,12 +1022,15 @@ body::after {
 
 /* Design Studio Ethos — hover squares */
 .ethos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
 }
 .ethos-square {
   position: relative;
+  flex: 0 0 calc(20% - 10px); /* 5 across → 5 over 4 for 9 items */
+  min-width: 150px;
   aspect-ratio: 1 / 1;
   overflow: hidden;
   display: flex;
